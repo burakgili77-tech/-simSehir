@@ -1,0 +1,16 @@
+{
+  "name": "İsim Şehir Online",
+  "short_name": "İsimŞehir",
+  "start_url": "/-simSehir/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#00f2ff",
+  "description": "Online İsim Şehir Oyunu 2026",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/248/248930.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
