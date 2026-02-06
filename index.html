@@ -7,22 +7,40 @@
     <title>İsim Şehir Online Pro 2026</title>
     
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-app-pub-5008597546147207" crossorigin="anonymous"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    
     <style>
         :root { --neon: #00f2ff; --glass: rgba(12, 28, 48, 0.98); --border: rgba(0, 242, 255, 0.3); --bg: #010816; --win: #00ff88; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; outline: none; touch-action: manipulation; }
-        body, html { height: 100%; width: 100%; background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; overflow: hidden; display: flex; flex-direction: column; }
         
+        body, html { 
+            height: 100%; 
+            width: 100%; 
+            background: var(--bg); 
+            color: white; 
+            font-family: 'Segoe UI', sans-serif; 
+            overflow: hidden; 
+            display: flex; 
+            flex-direction: column;
+            align-items: center; /* Geniş ekranlarda içeriği yatayda ortalar */
+        }
+        
+        /* ANA KONTEYNER: Ekranın çok yayılmasını engeller */
         #app { 
-            width: 96%; max-width: 420px; 
+            width: 100%; 
+            max-width: 500px; /* Tablet/PC'de çok yayılmasın diye limit koyduk */
             flex: 1;
-            margin: 10px auto; 
-            background: var(--glass); backdrop-filter: blur(25px); 
-            border: 2px solid var(--border); border-radius: 25px; padding: 20px; 
-            display: flex; flex-direction: column; position: relative; 
+            margin: 0 auto; 
+            background: var(--glass); 
+            backdrop-filter: blur(25px); 
+            border-left: 1px solid var(--border); 
+            border-right: 1px solid var(--border);
+            padding: 20px; 
+            display: flex; 
+            flex-direction: column; 
+            position: relative; 
             z-index: 10; 
             box-shadow: 0 0 40px rgba(0,0,0,0.8);
             overflow: hidden;
@@ -40,19 +58,11 @@
         .row-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 15px; margin-bottom: 6px; border: 1px solid rgba(255,255,255,0.05); }
         .vote-card { background: rgba(255,255,255,0.05); padding: 12px; border-radius: 18px; margin-bottom: 8px; border: 1px solid var(--border); }
         .hidden { display: none !important; }
-        .active-ok { background: var(--win) !important; color: #000 !important; box-shadow: 0 0 8px rgba(0,255,136,0.25); }
-        .active-no { background: #ff0055 !important; color: #fff !important; box-shadow: 0 0 8px rgba(255,0,85,0.25); }
-
-        #confirm-modal { position: fixed; left: 0; top: 0; right: 0; bottom: 0; display:flex; align-items:center; justify-content:center; background: rgba(0,0,0,0.6); z-index: 9999; }
-        #confirm-box { background: var(--glass); border: 2px solid var(--border); padding: 18px; border-radius: 14px; width: 90%; max-width: 360px; text-align:center; color: #fff; box-shadow: 0 0 30px rgba(0,0,0,0.7); }
-        #confirm-msg { margin-bottom: 12px; font-weight:700; color: var(--neon); }
-        .confirm-row { display:flex; gap:8px; justify-content:space-between; }
-        .confirm-row .menu-btn { flex:1; margin:0; }
-
-        /* REKLAM ALANLARI GÜNCELLENDİ (KAYMA ÖNLEYİCİ) */
-        .ad-top-fixed { width: 100%; min-height: 60px; background: #000; z-index: 2000; display: flex; justify-content: center; align-items: center; border-bottom: 1px solid var(--neon); }
-        .ad-bottom-fixed { width: 100%; min-height: 60px; background: #000; z-index: 2000; display: flex; justify-content: center; align-items: center; border-top: 1px solid var(--neon); }
-        .ad-inline-box { width: 100%; min-height: 100px; background: rgba(0,0,0,0.3); margin-top: 15px; display: flex; justify-content: center; align-items: center; border: 1px dashed rgba(255,255,255,0.1); border-radius: 15px; overflow: hidden; }
+        
+        /* REKLAM ALANLARI */
+        .ad-top-fixed { width: 100%; max-width: 500px; min-height: 50px; background: #000; z-index: 2000; display: flex; justify-content: center; align-items: center; }
+        .ad-bottom-fixed { width: 100%; max-width: 500px; min-height: 50px; background: #000; z-index: 2000; display: flex; justify-content: center; align-items: center; }
+        .ad-inline-box { width: 100%; min-height: 100px; background: rgba(0,0,0,0.3); margin: 15px 0; display: flex; justify-content: center; align-items: center; border: 1px dashed rgba(255,255,255,0.1); border-radius: 15px; }
     </style>
 </head>
 <body>
@@ -71,19 +81,9 @@
         <div class="logo" data-lang="title">İSİM ŞEHİR</div>
         <div class="scroll-v">
             <input type="text" id="p-name" class="input-box" data-lang-placeholder="placeholder" placeholder="İSİM GİR">
-            <button id="create-room-btn" class="menu-btn btn-main" data-lang="create">OPEN ROOM</button>
+            <button id="create-room-btn" class="menu-btn btn-main" data-lang="create">ODA KUR</button>
             <button class="menu-btn" id="join-nav-btn" data-lang="join">KATIL</button>
             <button class="menu-btn" id="settings-nav-btn" data-lang="settings">⚙️ AYARLAR</button>
-
-            <div class="ad-inline-box">
-                 <ins class="adsbygoogle"
-                     style="display:block; width:100%; height:100%;"
-                     data-ad-format="fluid"
-                     data-ad-layout-key="-fb+5w+4e-db+86"
-                     data-ad-client="ca-app-pub-5008597546147207"
-                     data-ad-slot="4874920980"></ins>
-                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-            </div>
         </div>
     </div>
 
@@ -101,7 +101,7 @@
         <div style="text-align:center;"><small data-lang="room_code">KOD:</small> <b id="display-code" style="color:var(--neon)">-</b></div>
         <div id="lobby-myname" style="text-align:center; margin:8px 0; color:var(--neon); font-weight:800;"></div>
         <div class="scroll-v" id="lobby-players"></div>
-        <div id="lobby-cats" style="max-height:100px; overflow-y:auto; border:1px solid var(--border); border-radius:15px; padding:10px; margin-bottom:10px;"></div>
+        <div id="lobby-cats" style="max-height:150px; overflow-y:auto; border:1px solid var(--border); border-radius:15px; padding:10px; margin-bottom:10px;"></div>
 
         <div id="lobby-admin-controls" class="hidden">
             <small><span data-lang="time_label">SÜRE</span>: <span id="time-val">60</span>s</small>
@@ -140,17 +140,7 @@
         <div class="scroll-v" id="final-ranks"></div>
         <button class="menu-btn btn-main" id="results-back-btn" data-lang="back">LOBİYE DÖN</button>
     </div>
-</div>
 
-<div id="confirm-modal" class="hidden" aria-hidden="true">
-    <div id="confirm-box">
-        <div id="confirm-msg">EMİN MİSİN?</div>
-        <div class="confirm-row" style="margin-top:6px;">
-            <button id="confirm-no" class="menu-btn">HAYIR</button>
-            <div style="width:8px"></div>
-            <button id="confirm-yes" class="menu-btn btn-main">EVET</button>
-        </div>
-    </div>
 </div>
 
 <div class="ad-bottom-fixed">
@@ -162,6 +152,7 @@
 </div>
 
 <script>
+    // Firebase Yapılandırması
     const firebaseConfig = {
         apiKey: "AIzaSyBXIpV169nwxWT8fOYaA7NK5jcqmlw64Yg",
         authDomain: "isimsehironline-af2bd.firebaseapp.com",
@@ -174,17 +165,16 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
+    // Değişkenler
     let curLang = 'tr', myName = "", myRoomCode = "", isAdmin = false, roomPlayers = [],
         currentCats = ["İSİM", "ŞEHİR", "HAYVAN", "BİTKİ", "EŞYA"], timerInt,
         currentLetter = "", localTime = 60, currentStatus = "", prevRoomRef = null;
 
     let votesRef = null, votesListener = null;
-    const localVotes = {};
-    let confirmOpen = false;
 
     const langDict = {
-        tr: { title:"İSİM ŞEHİR", create:"ODA KUR", join:"KATIL", settings:"AYARLAR", start:"BAŞLAT", placeholder:"İSİM GİR", join_title:"ODAYA KATIL", code_placeholder:"ODA KODU", back:"GERİ / LOBİ", room_code:"KOD:", finish:"BİTTİ!", results:"🏆 SKORLAR", menu:"ANA MENÜ", time_label:"SÜRE", cat_placeholder:"KATEGORİ", review_title:"OYLAMA", see_results:"SONUÇLAR", waiting:"BEKLENİYOR...", red:"RED", ok:"TAMAM", confirm_title:"EMİN MİSİN?", confirm_yes:"EVET", confirm_no:"HAYIR" },
-        en: { title:"NAME CITY", create:"OPEN ROOM", join:"JOIN", settings:"SETTINGS", start:"START", placeholder:"ENTER NAME", join_title:"JOIN ROOM", code_placeholder:"ROOM CODE", back:"BACK / LOBBY", room_code:"CODE:", finish:"FINISH!", results:"🏆 SCORES", menu:"MAIN MENU", time_label:"TIME", cat_placeholder:"CATEGORY", review_title:"VOTING", see_results:"RESULTS", waiting:"WAITING FOR ADMIN...", red:"NO", ok:"OK", confirm_title:"ARE YOU SURE?", confirm_yes:"YES", confirm_no:"NO" }
+        tr: { title:"İSİM ŞEHİR", create:"ODA KUR", join:"KATIL", settings:"AYARLAR", start:"BAŞLAT", placeholder:"İSİM GİR", join_title:"ODAYA KATIL", code_placeholder:"ODA KODU", back:"GERİ / LOBİ", room_code:"KOD:", finish:"BİTTİ!", results:"🏆 SKORLAR", menu:"ANA MENÜ", time_label:"SÜRE", cat_placeholder:"KATEGORİ", review_title:"OYLAMA", see_results:"SONUÇLAR", waiting:"BEKLENİYOR...", red:"RED", ok:"TAMAM" },
+        en: { title:"NAME CITY", create:"OPEN ROOM", join:"JOIN", settings:"SETTINGS", start:"START", placeholder:"ENTER NAME", join_title:"JOIN ROOM", code_placeholder:"ROOM CODE", back:"BACK / LOBBY", room_code:"CODE:", finish:"FINISH!", results:"🏆 SCORES", menu:"MAIN MENU", time_label:"TIME", cat_placeholder:"CATEGORY", review_title:"VOTING", see_results:"RESULTS", waiting:"WAITING FOR ADMIN...", red:"NO", ok:"OK" }
     };
 
     const catMapTRtoEN = { "İSİM":"NAME", "ŞEHİR":"CITY", "HAYVAN":"ANIMAL", "BİTKİ":"PLANT", "EŞYA":"OBJECT" };
@@ -196,6 +186,7 @@
         return catMapENtoTR[c] || c;
     }
 
+    // Event Listeners
     document.getElementById('create-room-btn').addEventListener('click', () => initRoom(true));
     document.getElementById('join-nav-btn').addEventListener('click', () => nav('sc-join'));
     document.getElementById('settings-nav-btn').addEventListener('click', () => nav('sc-settings'));
@@ -221,39 +212,12 @@
             if(langDict[curLang][key]) el.placeholder = langDict[curLang][key];
         });
         document.getElementById('lang-btn').innerText = curLang === 'tr' ? "DİL: TR" : "LANG: EN";
-        const btn = document.getElementById('finish-btn');
-        if(btn) btn.innerText = `${langDict[curLang].finish} (0/${roomPlayers.length || 0})`;
-        const cm = document.getElementById('confirm-msg');
-        if(cm) cm.innerText = langDict[curLang].confirm_title;
-        const yes = document.getElementById('confirm-yes'); if(yes) yes.innerText = langDict[curLang].confirm_yes;
-        const no = document.getElementById('confirm-no'); if(no) no.innerText = langDict[curLang].confirm_no;
         renderLobbyCats();
         renderGameInputsLabels();
-        if(currentStatus === 'review') startReviewUI();
     }
 
     function nav(id) { document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); updateUILanguage(); }
     function switchLang() { curLang = (curLang === 'tr') ? 'en' : 'tr'; updateUILanguage(); }
-
-    function showConfirm() {
-        if(confirmOpen) return Promise.resolve('no');
-        confirmOpen = true;
-        const modal = document.getElementById('confirm-modal');
-        modal.classList.remove('hidden'); modal.setAttribute('aria-hidden','false');
-        document.body.style.pointerEvents = 'none'; modal.style.pointerEvents = 'auto';
-        const yes = document.getElementById('confirm-yes'), no = document.getElementById('confirm-no');
-        return new Promise(res => {
-            const cleanup = (val) => {
-                yes.onclick = null; no.onclick = null;
-                modal.classList.add('hidden'); modal.setAttribute('aria-hidden','true');
-                document.body.style.pointerEvents = '';
-                confirmOpen = false;
-                res(val);
-            };
-            yes.onclick = () => cleanup('yes');
-            no.onclick = () => cleanup('no');
-        });
-    }
 
     async function initRoom(host) {
         const inputName = document.getElementById('p-name').value.trim().toUpperCase();
@@ -295,18 +259,10 @@
         if(!myRoomCode) return;
         const rRef = db.ref(`rooms/${myRoomCode}`);
         prevRoomRef = rRef;
-        try { rRef.off(); } catch(e) {}
         rRef.child('players').on('value', snap => {
             const val = snap.val() || {};
             roomPlayers = Object.keys(val);
             document.getElementById('lobby-players').innerHTML = roomPlayers.map(p => `<div class="row-item"><span>👤 ${p}</span></div>`).join('');
-            const btn = document.getElementById('finish-btn');
-            if(btn) btn.innerText = `${langDict[curLang].finish} (0/${roomPlayers.length || 0})`;
-            if(document.getElementById('lobby-myname') && myName) document.getElementById('lobby-myname').innerText = myName;
-            if(myName && !roomPlayers.includes(myName)) {
-                db.ref(`rooms/${myRoomCode}/players/${myName}`).set({ score: 0 });
-                db.ref(`rooms/${myRoomCode}/players/${myName}`).onDisconnect().remove();
-            }
         });
         rRef.child('status').on('value', s => {
             const st = s.val();
@@ -315,16 +271,11 @@
             if(st === 'playing') startGameUI();
             if(st === 'review') startReviewUI();
             if(st === 'results') showLeaderboard();
-            if(st === 'lobby') {
-                document.getElementById('lobby-admin-controls').classList.toggle('hidden', !isAdmin);
-                document.getElementById('lobby-waiting').classList.toggle('hidden', isAdmin);
-                nav('sc-lobby');
-            }
+            if(st === 'lobby') nav('sc-lobby');
         });
         rRef.child('cats').on('value', snap => {
             currentCats = snap.val() || [];
             renderLobbyCats();
-            renderGameInputsLabels();
         });
         rRef.child('time').on('value', snap => {
             localTime = snap.val() || 0;
@@ -351,84 +302,47 @@
         const inputsArea = document.getElementById('inputs-area');
         if(!inputsArea) return;
         const children = Array.from(inputsArea.children || []);
-        if(children.length === 0) return;
-        currentCats.forEach((c, i) => {
-            const child = children[i];
-            if(child) {
-                const small = child.querySelector('small');
-                if(small) small.innerText = displayCat(c);
-            }
-        });
+        currentCats.forEach((c, i) => { if(children[i]) children[i].querySelector('small').innerText = displayCat(c); });
     }
 
     function startGameTrigger() {
         const letter = "ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ"[Math.floor(Math.random()*29)];
-        db.ref(`rooms/${myRoomCode}`).update({ 
-            status: 'playing', 
-            letter: letter, 
-            time: parseInt(document.getElementById('time-slider').value), 
-            finishedCount: 0, answers: null, votes: null
-        }).catch(e => console.error("startGame error", e));
+        db.ref(`rooms/${myRoomCode}`).update({ status: 'playing', letter: letter, time: parseInt(document.getElementById('time-slider').value), finishedCount: 0, answers: null, votes: null });
     }
 
     function startGameUI() {
         db.ref(`rooms/${myRoomCode}`).once('value').then(snap => {
-            const data = snap.val() || {};
-            currentLetter = data.letter || 'A';
+            const data = snap.val();
+            currentLetter = data.letter;
             document.getElementById('let').innerText = currentLetter;
-            currentCats = data.cats || currentCats;
             document.getElementById('inputs-area').innerHTML = currentCats.map(c => `
                 <div style="margin-bottom:12px;">
                     <small style="color:var(--neon)">${displayCat(c)}</small>
                     <input type="text" id="ans-${c.replace(/\s/g,'_')}" class="input-box" style="text-align:left; margin:0; text-transform:uppercase;">
                 </div>`).join('');
-            const btn = document.getElementById('finish-btn');
-            btn.disabled = false; btn.style.opacity = "1";
+            document.getElementById('finish-btn').disabled = false;
             nav('sc-game');
             if(isAdmin) {
                 clearInterval(timerInt);
-                timerInt = setInterval(() => {
-                    db.ref(`rooms/${myRoomCode}/time`).transaction(t => (t > 0) ? t - 1 : 0);
-                }, 1000);
+                timerInt = setInterval(() => { db.ref(`rooms/${myRoomCode}/time`).transaction(t => (t > 0) ? t - 1 : 0); }, 1000);
             }
-        }).catch(e => console.error("startGameUI error", e));
+        });
     }
 
     function submitAnswers() {
-        const btn = document.getElementById('finish-btn');
-        if(btn.disabled) return;
         const answers = {};
         currentCats.forEach(c => {
-            const el = document.getElementById('ans-' + c.replace(/\s/g,'_'));
-            const val = el ? el.value.trim().toUpperCase() : "";
-            if(val && currentLetter && val.startsWith(currentLetter)) answers[c] = val;
-            else answers[c] = "-";
+            const val = document.getElementById('ans-' + c.replace(/\s/g,'_')).value.trim().toUpperCase();
+            answers[c] = (val && val.startsWith(currentLetter)) ? val : "-";
         });
-        btn.disabled = true; btn.style.opacity = "0.5";
+        document.getElementById('finish-btn').disabled = true;
         db.ref(`rooms/${myRoomCode}/answers/${myName}`).set(answers).then(() => {
             db.ref(`rooms/${myRoomCode}/finishedCount`).transaction(c => (c || 0) + 1);
-        }).catch(e => {
-            db.ref(`rooms/${myRoomCode}/finishedCount`).transaction(c => (c || 0) + 1);
         });
-    }
-
-    async function onBackFromGame() {
-        if (currentStatus === 'playing') {
-            const res = await showConfirm();
-            if(res !== 'yes') return;
-        }
-        clearInterval(timerInt);
-        if(isAdmin) db.ref(`rooms/${myRoomCode}`).update({ status: 'lobby' }).catch(e=>console.error("backToLobby update error", e));
-        if(!prevRoomRef) listenRoom();
-        document.getElementById('lobby-admin-controls').classList.toggle('hidden', !isAdmin);
-        document.getElementById('lobby-waiting').classList.toggle('hidden', isAdmin);
-        nav('sc-lobby');
     }
 
     function addCat() {
-        const cRaw = document.getElementById('cat-in').value.trim();
-        if(!cRaw) return;
-        const c = cRaw.toUpperCase();
+        const c = document.getElementById('cat-in').value.trim().toUpperCase();
         if(c && !currentCats.includes(c)) {
             currentCats.push(c);
             db.ref(`rooms/${myRoomCode}/cats`).set(currentCats);
@@ -439,7 +353,7 @@
 
     function startReviewUI() {
         clearInterval(timerInt);
-        try { if(votesRef && votesListener) votesRef.off('value', votesListener); } catch(e){}
+        if(votesRef && votesListener) votesRef.off('value', votesListener);
         db.ref(`rooms/${myRoomCode}/answers`).once('value').then(snap => {
             const allAns = snap.val() || {}; let html = "";
             currentCats.forEach(cat => {
@@ -452,8 +366,8 @@
                         <div style="display:flex; justify-content:space-between;"><small>👤 ${p}</small> <span id="vcount-${sid}">✔0 ✖0</span></div>
                         <div style="font-size:18px; font-weight:bold; margin:10px 0;">${ans}</div>
                         <div style="display:flex; gap:10px;">
-                            <button class="menu-btn" data-sid="${sid}" data-type="no" style="flex:1; margin:0;">${langDict[curLang].red}</button>
-                            <button class="menu-btn" data-sid="${sid}" data-type="ok" style="flex:1; margin:0;">${langDict[curLang].ok}</button>
+                            <button class="menu-btn" onclick="vote('${sid}','no')" style="flex:1; margin:0;">${langDict[curLang].red}</button>
+                            <button class="menu-btn" onclick="vote('${sid}','ok')" style="flex:1; margin:0;">${langDict[curLang].ok}</button>
                         </div>
                     </div>`;
                 });
@@ -461,50 +375,20 @@
             document.getElementById('all-reviews-list').innerHTML = html;
             if(isAdmin) document.getElementById('admin-results-btn').classList.remove('hidden');
             nav('sc-review');
-            const list = document.getElementById('all-reviews-list');
-            list.onclick = function(e) {
-                const btn = e.target.closest('button[data-sid]');
-                if(!btn) return;
-                const sid = btn.getAttribute('data-sid');
-                const type = btn.getAttribute('data-type');
-                const card = document.getElementById(`card-${sid}`);
-                if(card) {
-                    const bno = card.querySelector('button[data-type="no"]');
-                    const bok = card.querySelector('button[data-type="ok"]');
-                    if(bno) bno.classList.remove('active-no', 'active-ok');
-                    if(bok) bok.classList.remove('active-no', 'active-ok');
-                    if(type === 'ok' && bok) bok.classList.add('active-ok');
-                    if(type === 'no' && bno) bno.classList.add('active-no');
-                }
-                localVotes[sid] = { type, ts: Date.now() };
-                setTimeout(()=>{ if(localVotes[sid] && Date.now()-localVotes[sid].ts>3000) delete localVotes[sid]; }, 3500);
-                db.ref(`rooms/${myRoomCode}/votes/${sid}/${myName}`).set(type).catch(e=>console.error("vote error", e));
-            };
             votesRef = db.ref(`rooms/${myRoomCode}/votes`);
-            votesListener = function(vsnap) {
+            votesListener = (vsnap) => {
                 const all = vsnap.val() || {};
                 Object.keys(all).forEach(sid => {
-                    const vObj = all[sid] || {};
-                    const v = Object.values(vObj);
+                    const v = Object.values(all[sid] || {});
                     const el = document.getElementById(`vcount-${sid}`);
                     if(el) el.innerText = `✔${v.filter(x=>x==='ok').length} ✖${v.filter(x=>x==='no').length}`;
-                    const card = document.getElementById(`card-${sid}`);
-                    if(card) {
-                        const bno = card.querySelector('button[data-type="no"]');
-                        const bok = card.querySelector('button[data-type="ok"]');
-                        if(bno) bno.classList.remove('active-no', 'active-ok');
-                        if(bok) bok.classList.remove('active-no', 'active-ok');
-                        const dbMyVote = vObj[myName];
-                        const opt = localVotes[sid] && (Date.now()-localVotes[sid].ts < 3500) ? localVotes[sid].type : null;
-                        const resolved = dbMyVote || opt || null;
-                        if(resolved === 'ok' && bok) bok.classList.add('active-ok');
-                        else if(resolved === 'no' && bno) bno.classList.add('active-no');
-                    }
                 });
             };
             votesRef.on('value', votesListener);
         });
     }
+
+    function vote(sid, type) { db.ref(`rooms/${myRoomCode}/votes/${sid}/${myName}`).set(type); }
 
     async function showLeaderboard() {
         if(isAdmin) db.ref(`rooms/${myRoomCode}`).update({ status: 'results' });
@@ -512,8 +396,7 @@
         const vts = snap.val().votes || {};
         let scores = {}; roomPlayers.forEach(p => scores[p] = 0);
         Object.keys(vts).forEach(vid => { 
-            const parts = vid.split('_');
-            const target = parts[parts.length-1].replace(/_/g, ' '); 
+            const parts = vid.split('_'); const target = parts[parts.length-1].replace(/_/g, ' '); 
             const v = Object.values(vts[vid] || {}); 
             if(v.filter(x=>x==='ok').length >= v.filter(x=>x==='no').length) scores[target] = (scores[target] || 0) + 10; 
         });
@@ -521,21 +404,13 @@
         confetti(); nav('sc-results');
     }
 
-    function goToRoomLobby() {
-        clearInterval(timerInt);
-        if(!prevRoomRef) listenRoom();
-        document.getElementById('lobby-admin-controls').classList.toggle('hidden', !isAdmin);
-        document.getElementById('lobby-waiting').classList.toggle('hidden', isAdmin);
-        nav('sc-lobby');
-    }
+    function goToRoomLobby() { db.ref(`rooms/${myRoomCode}`).update({ status: 'lobby' }); }
+    function onBackFromGame() { if(confirm("Lobiye dönersen oyun iptal olur. Emin misin?")) goToRoomLobby(); }
 
-    async function goToMainMenu(confirmFirst) {
-        if(confirmFirst) {
-            const res = await showConfirm();
-            if(res !== 'yes') return;
-        }
+    function goToMainMenu(confirmFirst) {
+        if(confirmFirst && !confirm("Çıkmak istiyor musun?")) return;
         clearInterval(timerInt);
-        try{ if(prevRoomRef) { prevRoomRef.off(); } }catch(e){}
+        if(prevRoomRef) prevRoomRef.off();
         nav('sc-main');
     }
 
