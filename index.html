@@ -5,6 +5,9 @@
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>İsim Şehir Online Pro 2026</title>
+    
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-app-pub-5008597546147207" crossorigin="anonymous"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
@@ -12,24 +15,54 @@
         :root { --neon: #00f2ff; --glass: rgba(12, 28, 48, 0.98); --border: rgba(0, 242, 255, 0.3); --bg: #010816; --win: #00ff88; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; outline: none; touch-action: manipulation; }
         body, html { height: 100%; width: 100%; background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; overflow: hidden; position: fixed; }
-        #app { width: 92%; max-width: 400px; height: 92vh; background: var(--glass); backdrop-filter: blur(25px); border: 2px solid var(--border); border-radius: 40px; padding: 25px; display: flex; flex-direction: column; position: relative; margin: auto; margin-top: 4vh; z-index: 10; box-shadow: 0 0 40px rgba(0,0,0,0.8); }
-        .menu-btn { background: rgba(255, 255, 255, 0.08); border: 1px solid var(--border); color: #fff; padding: 16px; border-radius: 20px; font-size: 14px; font-weight: 800; cursor: pointer; margin-bottom: 12px; width: 100%; display: block; text-transform: uppercase; transition: 0.2s; text-align: center; }
+        
+        #app { 
+            width: 96%; max-width: 420px; 
+            height: calc(100vh - 140px); 
+            margin-top: 70px; 
+            background: var(--glass); backdrop-filter: blur(25px); 
+            border: 2px solid var(--border); border-radius: 25px; padding: 20px; 
+            display: flex; flex-direction: column; position: relative; 
+            margin-left: auto; margin-right: auto; z-index: 10; 
+            box-shadow: 0 0 40px rgba(0,0,0,0.8); 
+        }
+
+        .menu-btn { background: rgba(255, 255, 255, 0.08); border: 1px solid var(--border); color: #fff; padding: 14px; border-radius: 18px; font-size: 14px; font-weight: 800; cursor: pointer; margin-bottom: 10px; width: 100%; display: block; text-transform: uppercase; transition: 0.2s; text-align: center; }
         .menu-btn:active { background: var(--neon); color: #000; transform: scale(0.96); }
         .btn-main { background: var(--neon); color: #000 !important; border: none; box-shadow: 0 0 15px rgba(0,242,255,0.4); }
         .btn-back { background: rgba(255,0,85,0.15); color: #ff0055; border: 1px solid #ff0055; margin-top: auto; }
-        .logo { font-size: 28px; font-weight: 900; text-align: center; margin-bottom: 25px; text-shadow: 0 0 15px var(--neon); letter-spacing: 2px; }
+        .logo { font-size: 26px; font-weight: 900; text-align: center; margin-bottom: 20px; text-shadow: 0 0 15px var(--neon); letter-spacing: 2px; }
         .screen { display: flex; flex-direction: column; height: 100%; width: 100%; animation: fadeIn 0.2s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .scroll-v { flex: 1; overflow-y: auto; margin: 10px 0; padding-right: 5px; scrollbar-width: none; }
-        .input-box { width: 100%; background: rgba(0,0,0,0.6); border: 1px solid var(--border); padding: 14px; border-radius: 15px; color: white; margin-bottom: 15px; text-align: center; font-size: 16px; }
-        .row-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 18px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.05); }
-        .vote-card { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 20px; margin-bottom: 10px; border: 1px solid var(--border); }
+        .scroll-v { flex: 1; overflow-y: auto; margin: 5px 0; padding-right: 5px; scrollbar-width: none; }
+        .input-box { width: 100%; background: rgba(0,0,0,0.6); border: 1px solid var(--border); padding: 12px; border-radius: 15px; color: white; margin-bottom: 12px; text-align: center; font-size: 16px; }
+        .row-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 15px; margin-bottom: 6px; border: 1px solid rgba(255,255,255,0.05); }
+        .vote-card { background: rgba(255,255,255,0.05); padding: 12px; border-radius: 18px; margin-bottom: 8px; border: 1px solid var(--border); }
         .hidden { display: none !important; }
-        .active-ok { background: var(--win) !important; color: #000 !important; }
-        .active-no { background: #ff0055 !important; color: #fff !important; }
+        .active-ok { background: var(--win) !important; color: #000 !important; box-shadow: 0 0 8px rgba(0,255,136,0.25); }
+        .active-no { background: #ff0055 !important; color: #fff !important; box-shadow: 0 0 8px rgba(255,0,85,0.25); }
+
+        #confirm-modal { position: fixed; left: 0; top: 0; right: 0; bottom: 0; display:flex; align-items:center; justify-content:center; background: rgba(0,0,0,0.6); z-index: 9999; }
+        #confirm-box { background: var(--glass); border: 2px solid var(--border); padding: 18px; border-radius: 14px; width: 90%; max-width: 360px; text-align:center; color: #fff; box-shadow: 0 0 30px rgba(0,0,0,0.7); }
+        #confirm-msg { margin-bottom: 12px; font-weight:700; color: var(--neon); }
+        .confirm-row { display:flex; gap:8px; justify-content:space-between; }
+        .confirm-row .menu-btn { flex:1; margin:0; }
+
+        /* REKLAM ALANLARI */
+        .ad-top-fixed { position: fixed; top: 0; left: 0; width: 100%; height: 60px; background: #000; z-index: 2000; display: flex; justify-content: center; align-items: center; border-bottom: 1px solid var(--neon); }
+        .ad-bottom-fixed { position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: #000; z-index: 2000; display: flex; justify-content: center; align-items: center; border-top: 1px solid var(--neon); }
+        .ad-inline-box { width: 100%; min-height: 80px; background: rgba(0,0,0,0.3); margin-top: 15px; display: flex; justify-content: center; align-items: center; border: 1px dashed rgba(255,255,255,0.1); border-radius: 15px; overflow: hidden; }
     </style>
 </head>
 <body>
+
+<div class="ad-top-fixed">
+    <ins class="adsbygoogle"
+         style="display:inline-block;width:320px;height:50px"
+         data-ad-client="ca-app-pub-5008597546147207"
+         data-ad-slot="9197309377"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
 
 <div id="app">
     <div id="sc-main" class="screen">
@@ -37,9 +70,19 @@
         <div class="logo" data-lang="title">İSİM ŞEHİR</div>
         <div class="scroll-v">
             <input type="text" id="p-name" class="input-box" data-lang-placeholder="placeholder" placeholder="İSİM GİR">
-            <button class="menu-btn btn-main" onclick="initRoom(true)" data-lang="create">OPEN ROOM</button>
-            <button class="menu-btn" onclick="nav('sc-join')" data-lang="join">KATIL</button>
-            <button class="menu-btn" onclick="nav('sc-settings')" data-lang="settings">⚙️ AYARLAR</button>
+            <button id="create-room-btn" class="menu-btn btn-main" data-lang="create">OPEN ROOM</button>
+            <button class="menu-btn" id="join-nav-btn" data-lang="join">KATIL</button>
+            <button class="menu-btn" id="settings-nav-btn" data-lang="settings">⚙️ AYARLAR</button>
+
+            <div class="ad-inline-box">
+                 <ins class="adsbygoogle"
+                     style="display:block; width:100%; height:100%;"
+                     data-ad-format="fluid"
+                     data-ad-layout-key="-fb+5w+4e-db+86"
+                     data-ad-client="ca-app-pub-5008597546147207"
+                     data-ad-slot="4874920980"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
         </div>
     </div>
 
@@ -49,51 +92,72 @@
             <div id="timer" style="font-size:24px; font-weight:bold;">60</div>
         </div>
         <div class="scroll-v" id="inputs-area"></div>
-        <button id="finish-btn" class="menu-btn btn-main" onclick="submitAnswers()">BİTTİ! (0/0)</button>
-        <button class="menu-btn btn-back" onclick="backToLobby()" data-lang="back">LOBİYE DÖN</button>
+        <button id="finish-btn" class="menu-btn btn-main">BİTTİ! (0/0)</button>
+        <button class="menu-btn btn-back" id="back-from-game" data-lang="back">LOBİYE DÖN</button>
     </div>
 
     <div id="sc-lobby" class="screen hidden">
         <div style="text-align:center;"><small data-lang="room_code">KOD:</small> <b id="display-code" style="color:var(--neon)">-</b></div>
+        <div id="lobby-myname" style="text-align:center; margin:8px 0; color:var(--neon); font-weight:800;"></div>
         <div class="scroll-v" id="lobby-players"></div>
+        <div id="lobby-cats" style="max-height:100px; overflow-y:auto; border:1px solid var(--border); border-radius:15px; padding:10px; margin-bottom:10px;"></div>
+
         <div id="lobby-admin-controls" class="hidden">
             <small><span data-lang="time_label">SÜRE</span>: <span id="time-val">60</span>s</small>
             <input type="range" id="time-slider" min="30" max="240" step="10" value="60" oninput="document.getElementById('time-val').innerText = this.value" style="width:100%; margin:10px 0;">
-            <div id="lobby-cats" style="max-height:100px; overflow-y:auto; border:1px solid var(--border); border-radius:15px; padding:10px; margin-bottom:10px;"></div>
             <div style="display:flex; gap:5px; margin-bottom:10px;">
                 <input type="text" id="cat-in" class="input-box" style="margin:0; flex:1;" data-lang-placeholder="cat_placeholder" placeholder="KATEGORİ">
-                <button class="menu-btn btn-main" onclick="addCat()" style="margin:0; width:45px;">+</button>
+                <button id="add-cat-btn" class="menu-btn btn-main" style="margin:0; width:45px;">+</button>
             </div>
-            <button class="menu-btn btn-main" onclick="startGameTrigger()" data-lang="start">BAŞLAT</button>
+            <button id="start-game-btn" class="menu-btn btn-main" data-lang="start">BAŞLAT</button>
         </div>
         <div id="lobby-waiting" class="hidden" style="text-align:center; padding:20px; color:var(--neon);" data-lang="waiting">BEKLENİYOR...</div>
-        <button class="menu-btn btn-back" onclick="resetGame(true)" data-lang="menu">AYRIL / ÇIKIŞ</button>
+        <button id="leave-btn" class="menu-btn btn-back" data-lang="menu">AYRIL / ÇIKIŞ</button>
     </div>
 
     <div id="sc-settings" class="screen hidden">
         <h3 style="text-align:center; color:var(--neon); margin-bottom:20px;" data-lang="settings">AYARLAR</h3>
-        <button id="lang-btn" class="menu-btn btn-main" onclick="switchLang()">DİL: TR</button>
-        <button class="menu-btn" onclick="nav('sc-main')" data-lang="back">GERİ</button>
+        <button id="lang-btn" class="menu-btn btn-main">DİL: TR</button>
+        <button class="menu-btn" id="settings-back-btn" data-lang="back">GERİ</button>
     </div>
 
     <div id="sc-join" class="screen hidden">
         <h3 style="text-align:center; margin-bottom:20px;" data-lang="join_title">ODAYA KATIL</h3>
         <input type="text" id="join-code" class="input-box" data-lang-placeholder="code_placeholder" placeholder="ODA KODU" style="text-transform:uppercase;">
-        <button class="menu-btn btn-main" onclick="initRoom(false)" data-lang="join">KATIL</button>
-        <button class="menu-btn" onclick="nav('sc-main')" data-lang="back">GERİ</button>
+        <button id="join-room-btn" class="menu-btn btn-main" data-lang="join">KATIL</button>
+        <button class="menu-btn" id="join-back-btn" data-lang="back">GERİ</button>
     </div>
 
     <div id="sc-review" class="screen hidden">
         <h3 style="text-align:center; color:var(--neon); margin-bottom:10px;" data-lang="review_title">OYLAMA</h3>
         <div class="scroll-v" id="all-reviews-list"></div>
-        <button id="admin-results-btn" class="menu-btn btn-main hidden" onclick="showLeaderboard()" data-lang="see_results">SONUÇLAR</button>
+        <button id="admin-results-btn" class="menu-btn btn-main hidden" data-lang="see_results">SONUÇLAR</button>
     </div>
 
     <div id="sc-results" class="screen hidden">
         <h3 style="text-align:center; color:var(--neon);" data-lang="results">🏆 SKORLAR</h3>
         <div class="scroll-v" id="final-ranks"></div>
-        <button class="menu-btn btn-main" onclick="backToLobby()" data-lang="menu">LOBİYE DÖN</button>
+        <button class="menu-btn btn-main" id="results-back-btn" data-lang="back">LOBİYE DÖN</button>
     </div>
+</div>
+
+<div id="confirm-modal" class="hidden" aria-hidden="true">
+    <div id="confirm-box">
+        <div id="confirm-msg">EMİN MİSİN?</div>
+        <div class="confirm-row" style="margin-top:6px;">
+            <button id="confirm-no" class="menu-btn">HAYIR</button>
+            <div style="width:8px"></div>
+            <button id="confirm-yes" class="menu-btn btn-main">EVET</button>
+        </div>
+    </div>
+</div>
+
+<div class="ad-bottom-fixed">
+    <ins class="adsbygoogle"
+         style="display:inline-block;width:320px;height:50px"
+         data-ad-client="ca-app-pub-5008597546147207"
+         data-ad-slot="5685331978"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
 </div>
 
 <script>
@@ -109,36 +173,85 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    let curLang = 'tr', myName = "", myRoomCode = "", isAdmin = false, roomPlayers = [], 
-        currentCats = ["İSİM", "ŞEHİR", "HAYVAN", "BİTKİ", "EŞYA"], timerInt, 
-        currentLetter = "", localTime = 60, currentStatus = "";
-    
+    let curLang = 'tr', myName = "", myRoomCode = "", isAdmin = false, roomPlayers = [],
+        currentCats = ["İSİM", "ŞEHİR", "HAYVAN", "BİTKİ", "EŞYA"], timerInt,
+        currentLetter = "", localTime = 60, currentStatus = "", prevRoomRef = null;
+
+    let votesRef = null, votesListener = null;
+    const localVotes = {};
+    let confirmOpen = false;
+
     const langDict = {
-        tr: { title:"İSİM ŞEHİR", create:"OPEN ROOM", join:"KATIL", settings:"AYARLAR", start:"BAŞLAT", placeholder:"İSİM GİR", join_title:"ODAYA KATIL", code_placeholder:"ODA KODU", back:"GERİ / LOBİ", room_code:"KOD:", finish:"BİTTİ!", results:"🏆 SKORLAR", menu:"ANA MENÜ", time_label:"SÜRE", cat_placeholder:"KATEGORİ", review_title:"OYLAMA", see_results:"SONUÇLAR", waiting:"BEKLENİYOR...", red:"RED", ok:"TAMAM" },
-        en: { title:"NAME CITY", create:"OPEN ROOM", join:"JOIN", settings:"SETTINGS", start:"START", placeholder:"ENTER NAME", join_title:"JOIN ROOM", code_placeholder:"ROOM CODE", back:"BACK / LOBBY", room_code:"CODE:", finish:"FINISH!", results:"🏆 SCORES", menu:"MAIN MENU", time_label:"TIME", cat_placeholder:"CATEGORY", review_title:"VOTING", see_results:"RESULTS", waiting:"WAITING FOR ADMIN...", red:"NO", ok:"OK" }
+        tr: { title:"İSİM ŞEHİR", create:"ODA KUR", join:"KATIL", settings:"AYARLAR", start:"BAŞLAT", placeholder:"İSİM GİR", join_title:"ODAYA KATIL", code_placeholder:"ODA KODU", back:"GERİ / LOBİ", room_code:"KOD:", finish:"BİTTİ!", results:"🏆 SKORLAR", menu:"ANA MENÜ", time_label:"SÜRE", cat_placeholder:"KATEGORİ", review_title:"OYLAMA", see_results:"SONUÇLAR", waiting:"BEKLENİYOR...", red:"RED", ok:"TAMAM", confirm_title:"EMİN MİSİN?", confirm_yes:"EVET", confirm_no:"HAYIR" },
+        en: { title:"NAME CITY", create:"OPEN ROOM", join:"JOIN", settings:"SETTINGS", start:"START", placeholder:"ENTER NAME", join_title:"JOIN ROOM", code_placeholder:"ROOM CODE", back:"BACK / LOBBY", room_code:"CODE:", finish:"FINISH!", results:"🏆 SCORES", menu:"MAIN MENU", time_label:"TIME", cat_placeholder:"CATEGORY", review_title:"VOTING", see_results:"RESULTS", waiting:"WAITING FOR ADMIN...", red:"NO", ok:"OK", confirm_title:"ARE YOU SURE?", confirm_yes:"YES", confirm_no:"NO" }
     };
 
-    function nav(id) { 
-        document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden')); 
-        document.getElementById(id).classList.remove('hidden'); 
-        updateUILanguage(); 
+    const catMapTRtoEN = { "İSİM":"NAME", "ŞEHİR":"CITY", "HAYVAN":"ANIMAL", "BİTKİ":"PLANT", "EŞYA":"OBJECT" };
+    const catMapENtoTR = Object.fromEntries(Object.entries(catMapTRtoEN).map(([k,v])=>[v,k]));
+
+    function displayCat(c) {
+        if(!c) return c;
+        if(curLang === 'en') return catMapTRtoEN[c] || c;
+        return catMapENtoTR[c] || c;
     }
 
-    function switchLang() { 
-        curLang = (curLang === 'tr') ? 'en' : 'tr'; 
-        document.getElementById('lang-btn').innerText = curLang === 'tr' ? "DİL: TR" : "LANG: EN"; 
-        updateUILanguage(); 
+    document.getElementById('create-room-btn').addEventListener('click', () => initRoom(true));
+    document.getElementById('join-nav-btn').addEventListener('click', () => nav('sc-join'));
+    document.getElementById('settings-nav-btn').addEventListener('click', () => nav('sc-settings'));
+    document.getElementById('join-back-btn').addEventListener('click', () => nav('sc-main'));
+    document.getElementById('settings-back-btn').addEventListener('click', () => nav('sc-main'));
+    document.getElementById('join-room-btn').addEventListener('click', () => initRoom(false));
+    document.getElementById('leave-btn').addEventListener('click', () => goToMainMenu(true));
+    document.getElementById('add-cat-btn').addEventListener('click', () => addCat());
+    document.getElementById('results-back-btn').addEventListener('click', () => goToRoomLobby());
+    document.getElementById('back-from-game').addEventListener('click', () => onBackFromGame());
+    document.getElementById('lang-btn').addEventListener('click', () => switchLang());
+    document.getElementById('admin-results-btn').addEventListener('click', () => showLeaderboard());
+    document.getElementById('start-game-btn').addEventListener('click', () => { if(!isAdmin) return alert(curLang==='tr' ? "Yalnızca yönetici başlatabilir." : "Only admin can start."); startGameTrigger(); });
+    document.getElementById('finish-btn').addEventListener('click', submitAnswers);
+
+    function updateUILanguage() {
+        document.querySelectorAll('[data-lang]').forEach(el => {
+            const key = el.getAttribute('data-lang');
+            if(langDict[curLang][key]) el.innerText = langDict[curLang][key];
+        });
+        document.querySelectorAll('[data-lang-placeholder]').forEach(el => {
+            const key = el.getAttribute('data-lang-placeholder');
+            if(langDict[curLang][key]) el.placeholder = langDict[curLang][key];
+        });
+        document.getElementById('lang-btn').innerText = curLang === 'tr' ? "DİL: TR" : "LANG: EN";
+        const btn = document.getElementById('finish-btn');
+        if(btn) btn.innerText = `${langDict[curLang].finish} (0/${roomPlayers.length || 0})`;
+        const cm = document.getElementById('confirm-msg');
+        if(cm) cm.innerText = langDict[curLang].confirm_title;
+        const yes = document.getElementById('confirm-yes'); if(yes) yes.innerText = langDict[curLang].confirm_yes;
+        const no = document.getElementById('confirm-no'); if(no) no.innerText = langDict[curLang].confirm_no;
+        renderLobbyCats();
+        renderGameInputsLabels();
+        if(currentStatus === 'review') startReviewUI();
     }
 
-    function updateUILanguage() { 
-        document.querySelectorAll('[data-lang]').forEach(el => { 
-            const key = el.getAttribute('data-lang'); 
-            if(langDict[curLang][key]) el.innerText = langDict[curLang][key]; 
-        }); 
-        document.querySelectorAll('[data-lang-placeholder]').forEach(el => { 
-            const key = el.getAttribute('data-lang-placeholder'); 
-            if(langDict[curLang][key]) el.placeholder = langDict[curLang][key]; 
-        }); 
+    function nav(id) { document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); updateUILanguage(); }
+    function switchLang() { curLang = (curLang === 'tr') ? 'en' : 'tr'; updateUILanguage(); }
+
+    function showConfirm() {
+        if(confirmOpen) return Promise.resolve('no');
+        confirmOpen = true;
+        const modal = document.getElementById('confirm-modal');
+        modal.classList.remove('hidden'); modal.setAttribute('aria-hidden','false');
+        document.body.style.pointerEvents = 'none'; modal.style.pointerEvents = 'auto';
+        const yes = document.getElementById('confirm-yes'), no = document.getElementById('confirm-no');
+        return new Promise(res => {
+            const cleanup = (val) => {
+                yes.onclick = null; no.onclick = null;
+                modal.classList.add('hidden'); modal.setAttribute('aria-hidden','true');
+                document.body.style.pointerEvents = '';
+                confirmOpen = false;
+                res(val);
+            };
+            yes.onclick = () => cleanup('yes');
+            no.onclick = () => cleanup('no');
+        });
     }
 
     async function initRoom(host) {
@@ -146,52 +259,103 @@
         if(!inputName) return alert(curLang === 'tr' ? "İsim?" : "Name?");
         myName = inputName;
         isAdmin = host;
+        if(prevRoomRef) { try{ prevRoomRef.off(); }catch(e){} prevRoomRef = null; }
+        currentStatus = "";
         if(host) {
             myRoomCode = Math.random().toString(36).substr(2,4).toUpperCase();
-            await db.ref('rooms/' + myRoomCode).set({ status: 'lobby', admin: myName, cats: currentCats, time: 60, letter: 'A', finishedCount: 0 });
+            document.getElementById('display-code').innerText = myRoomCode;
+            document.getElementById('lobby-myname').innerText = myName;
+            document.getElementById('lobby-admin-controls').classList.remove('hidden');
+            document.getElementById('lobby-waiting').classList.add('hidden');
+            db.ref('rooms/' + myRoomCode).set({ status: 'lobby', admin: myName, cats: currentCats, time: 60, letter: 'A', finishedCount: 0 }).catch(()=>{});
+            db.ref(`rooms/${myRoomCode}/players/${myName}`).set({ score: 0 }).catch(()=>{});
+            db.ref(`rooms/${myRoomCode}/players/${myName}`).onDisconnect().remove();
+            renderLobbyCats();
+            nav('sc-lobby');
         } else {
             myRoomCode = document.getElementById('join-code').value.toUpperCase().trim();
             const snap = await db.ref('rooms/' + myRoomCode).once('value');
             if(!snap.exists()) return alert(curLang === 'tr' ? "Oda yok!" : "No room!");
+            const data = snap.val();
+            currentCats = data.cats || currentCats;
+            await db.ref(`rooms/${myRoomCode}/players/${myName}`).set({ score: 0 });
+            db.ref(`rooms/${myRoomCode}/players/${myName}`).onDisconnect().remove();
+            document.getElementById('display-code').innerText = myRoomCode;
+            document.getElementById('lobby-myname').innerText = myName;
+            document.getElementById('lobby-admin-controls').classList.add('hidden');
+            document.getElementById('lobby-waiting').classList.remove('hidden');
+            renderLobbyCats();
+            nav('sc-lobby');
         }
-        db.ref(`rooms/${myRoomCode}/players/${myName}`).set({ score: 0 });
-        db.ref(`rooms/${myRoomCode}/players/${myName}`).onDisconnect().remove();
-        document.getElementById('display-code').innerText = myRoomCode;
-        isAdmin ? document.getElementById('lobby-admin-controls').classList.remove('hidden') : document.getElementById('lobby-waiting').classList.remove('hidden');
-        nav('sc-lobby');
         listenRoom();
     }
 
     function listenRoom() {
+        if(!myRoomCode) return;
         const rRef = db.ref(`rooms/${myRoomCode}`);
-        rRef.child('players').on('value', snap => { 
-            roomPlayers = Object.keys(snap.val() || {}); 
-            document.getElementById('lobby-players').innerHTML = roomPlayers.map(p => `<div class="row-item"><span>👤 ${p}</span></div>`).join(''); 
+        prevRoomRef = rRef;
+        try { rRef.off(); } catch(e) {}
+        rRef.child('players').on('value', snap => {
+            const val = snap.val() || {};
+            roomPlayers = Object.keys(val);
+            document.getElementById('lobby-players').innerHTML = roomPlayers.map(p => `<div class="row-item"><span>👤 ${p}</span></div>`).join('');
+            const btn = document.getElementById('finish-btn');
+            if(btn) btn.innerText = `${langDict[curLang].finish} (0/${roomPlayers.length || 0})`;
+            if(document.getElementById('lobby-myname') && myName) document.getElementById('lobby-myname').innerText = myName;
+            if(myName && !roomPlayers.includes(myName)) {
+                db.ref(`rooms/${myRoomCode}/players/${myName}`).set({ score: 0 });
+                db.ref(`rooms/${myRoomCode}/players/${myName}`).onDisconnect().remove();
+            }
         });
-        rRef.child('status').on('value', s => { 
+        rRef.child('status').on('value', s => {
             const st = s.val();
             if(st === currentStatus) return;
             currentStatus = st;
-            if(st === 'playing') startGameUI(); 
+            if(st === 'playing') startGameUI();
             if(st === 'review') startReviewUI();
             if(st === 'results') showLeaderboard();
-            if(st === 'lobby') nav('sc-lobby');
+            if(st === 'lobby') {
+                document.getElementById('lobby-admin-controls').classList.toggle('hidden', !isAdmin);
+                document.getElementById('lobby-waiting').classList.toggle('hidden', isAdmin);
+                nav('sc-lobby');
+            }
         });
         rRef.child('cats').on('value', snap => {
             currentCats = snap.val() || [];
-            document.getElementById('lobby-cats').innerHTML = currentCats.map((c,i) => `<div class="row-item"><span>${c}</span>${isAdmin ? `<button onclick="removeCat(${i})">✕</button>` : ''}</div>`).join('');
+            renderLobbyCats();
+            renderGameInputsLabels();
         });
-        rRef.child('time').on('value', snap => { 
-            localTime = snap.val(); 
-            if(document.getElementById('timer')) document.getElementById('timer').innerText = localTime; 
+        rRef.child('time').on('value', snap => {
+            localTime = snap.val() || 0;
+            if(document.getElementById('timer')) document.getElementById('timer').innerText = localTime;
             if(localTime <= 0 && isAdmin && currentStatus === 'playing') db.ref(`rooms/${myRoomCode}`).update({ status: 'review' });
         });
-        rRef.child('finishedCount').on('value', snap => { 
+        rRef.child('finishedCount').on('value', snap => {
             const count = snap.val() || 0;
             const btn = document.getElementById('finish-btn');
-            if(btn) btn.innerText = `${langDict[curLang].finish} (${count}/${roomPlayers.length})`;
+            if(btn) btn.innerText = `${langDict[curLang].finish} (${count}/${roomPlayers.length || 0})`;
             if(roomPlayers.length > 0 && count >= roomPlayers.length && isAdmin && currentStatus === 'playing') {
                 db.ref(`rooms/${myRoomCode}`).update({ status: 'review' });
+            }
+        });
+    }
+
+    function renderLobbyCats() {
+        const container = document.getElementById('lobby-cats');
+        if(!container) return;
+        container.innerHTML = currentCats.map((c,i) => `<div class="row-item"><span>${displayCat(c)}</span>${isAdmin ? `<button onclick="removeCat(${i})">✕</button>` : ''}</div>`).join('');
+    }
+
+    function renderGameInputsLabels() {
+        const inputsArea = document.getElementById('inputs-area');
+        if(!inputsArea) return;
+        const children = Array.from(inputsArea.children || []);
+        if(children.length === 0) return;
+        currentCats.forEach((c, i) => {
+            const child = children[i];
+            if(child) {
+                const small = child.querySelector('small');
+                if(small) small.innerText = displayCat(c);
             }
         });
     }
@@ -202,20 +366,19 @@
             status: 'playing', 
             letter: letter, 
             time: parseInt(document.getElementById('time-slider').value), 
-            finishedCount: 0, 
-            answers: null, 
-            votes: null
-        });
+            finishedCount: 0, answers: null, votes: null
+        }).catch(e => console.error("startGame error", e));
     }
 
     function startGameUI() {
-        db.ref(`rooms/${myRoomCode}`).once('value', snap => {
-            const data = snap.val();
-            currentLetter = data.letter;
+        db.ref(`rooms/${myRoomCode}`).once('value').then(snap => {
+            const data = snap.val() || {};
+            currentLetter = data.letter || 'A';
             document.getElementById('let').innerText = currentLetter;
-            document.getElementById('inputs-area').innerHTML = data.cats.map(c => `
+            currentCats = data.cats || currentCats;
+            document.getElementById('inputs-area').innerHTML = currentCats.map(c => `
                 <div style="margin-bottom:12px;">
-                    <small style="color:var(--neon)">${c}</small>
+                    <small style="color:var(--neon)">${displayCat(c)}</small>
                     <input type="text" id="ans-${c.replace(/\s/g,'_')}" class="input-box" style="text-align:left; margin:0; text-transform:uppercase;">
                 </div>`).join('');
             const btn = document.getElementById('finish-btn');
@@ -227,39 +390,44 @@
                     db.ref(`rooms/${myRoomCode}/time`).transaction(t => (t > 0) ? t - 1 : 0);
                 }, 1000);
             }
-        });
+        }).catch(e => console.error("startGameUI error", e));
     }
 
     function submitAnswers() {
         const btn = document.getElementById('finish-btn');
         if(btn.disabled) return;
-        
         const answers = {};
-        currentCats.forEach(c => { 
-            const val = document.getElementById('ans-' + c.replace(/\s/g,'_')).value.trim().toUpperCase(); 
-            if(val && val.startsWith(currentLetter)) {
-                answers[c] = val;
-            } else {
-                answers[c] = "-";
-            }
+        currentCats.forEach(c => {
+            const el = document.getElementById('ans-' + c.replace(/\s/g,'_'));
+            const val = el ? el.value.trim().toUpperCase() : "";
+            if(val && currentLetter && val.startsWith(currentLetter)) answers[c] = val;
+            else answers[c] = "-";
         });
-        
-        btn.disabled = true; 
-        btn.style.opacity = "0.5";
-        
-        db.ref(`rooms/${myRoomCode}/answers/${myName}`).set(answers);
-        db.ref(`rooms/${myRoomCode}/finishedCount`).transaction(c => (c || 0) + 1);
+        btn.disabled = true; btn.style.opacity = "0.5";
+        db.ref(`rooms/${myRoomCode}/answers/${myName}`).set(answers).then(() => {
+            db.ref(`rooms/${myRoomCode}/finishedCount`).transaction(c => (c || 0) + 1);
+        }).catch(e => {
+            db.ref(`rooms/${myRoomCode}/finishedCount`).transaction(c => (c || 0) + 1);
+        });
     }
 
-    function backToLobby() {
-        if (currentStatus === 'playing' && !confirm(curLang === 'tr' ? "Ayrıl?" : "Leave?")) return;
+    async function onBackFromGame() {
+        if (currentStatus === 'playing') {
+            const res = await showConfirm();
+            if(res !== 'yes') return;
+        }
         clearInterval(timerInt);
-        if(isAdmin) db.ref(`rooms/${myRoomCode}`).update({ status: 'lobby' });
+        if(isAdmin) db.ref(`rooms/${myRoomCode}`).update({ status: 'lobby' }).catch(e=>console.error("backToLobby update error", e));
+        if(!prevRoomRef) listenRoom();
+        document.getElementById('lobby-admin-controls').classList.toggle('hidden', !isAdmin);
+        document.getElementById('lobby-waiting').classList.toggle('hidden', isAdmin);
         nav('sc-lobby');
     }
 
     function addCat() {
-        const c = document.getElementById('cat-in').value.toUpperCase().trim();
+        const cRaw = document.getElementById('cat-in').value.trim();
+        if(!cRaw) return;
+        const c = cRaw.toUpperCase();
         if(c && !currentCats.includes(c)) {
             currentCats.push(c);
             db.ref(`rooms/${myRoomCode}/cats`).set(currentCats);
@@ -270,20 +438,21 @@
 
     function startReviewUI() {
         clearInterval(timerInt);
-        db.ref(`rooms/${myRoomCode}/answers`).once('value', snap => {
+        try { if(votesRef && votesListener) votesRef.off('value', votesListener); } catch(e){}
+        db.ref(`rooms/${myRoomCode}/answers`).once('value').then(snap => {
             const allAns = snap.val() || {}; let html = "";
             currentCats.forEach(cat => {
-                html += `<div style="color:var(--neon); font-size:12px; font-weight:900; margin:15px 5px 5px 5px;">● ${cat}</div>`;
+                html += `<div style="color:var(--neon); font-size:12px; font-weight:900; margin:15px 5px 5px 5px;">● ${displayCat(cat)}</div>`;
                 roomPlayers.forEach(p => {
                     const ans = (allAns[p] && allAns[p][cat]) ? allAns[p][cat] : "-";
                     const sid = `${cat.replace(/\s/g,'_')}_${p.replace(/\s/g,'_')}`;
                     html += `
-                    <div class="vote-card">
+                    <div class="vote-card" id="card-${sid}">
                         <div style="display:flex; justify-content:space-between;"><small>👤 ${p}</small> <span id="vcount-${sid}">✔0 ✖0</span></div>
                         <div style="font-size:18px; font-weight:bold; margin:10px 0;">${ans}</div>
                         <div style="display:flex; gap:10px;">
-                            <button class="menu-btn" style="flex:1; margin:0;" onclick="vote('${p}','${cat}','no', this)">${langDict[curLang].red}</button>
-                            <button class="menu-btn" style="flex:1; margin:0;" onclick="vote('${p}','${cat}','ok', this)">${langDict[curLang].ok}</button>
+                            <button class="menu-btn" data-sid="${sid}" data-type="no" style="flex:1; margin:0;">${langDict[curLang].red}</button>
+                            <button class="menu-btn" data-sid="${sid}" data-type="ok" style="flex:1; margin:0;">${langDict[curLang].ok}</button>
                         </div>
                     </div>`;
                 });
@@ -291,15 +460,49 @@
             document.getElementById('all-reviews-list').innerHTML = html;
             if(isAdmin) document.getElementById('admin-results-btn').classList.remove('hidden');
             nav('sc-review');
-            db.ref(`rooms/${myRoomCode}/votes`).on('value', snap => { const all = snap.val() || {}; Object.keys(all).forEach(sid => { const v = Object.values(all[sid]); const el = document.getElementById(`vcount-${sid}`); if(el) el.innerText = `✔${v.filter(x=>x==='ok').length} ✖${v.filter(x=>x==='no').length}`; }); });
+            const list = document.getElementById('all-reviews-list');
+            list.onclick = function(e) {
+                const btn = e.target.closest('button[data-sid]');
+                if(!btn) return;
+                const sid = btn.getAttribute('data-sid');
+                const type = btn.getAttribute('data-type');
+                const card = document.getElementById(`card-${sid}`);
+                if(card) {
+                    const bno = card.querySelector('button[data-type="no"]');
+                    const bok = card.querySelector('button[data-type="ok"]');
+                    if(bno) bno.classList.remove('active-no', 'active-ok');
+                    if(bok) bok.classList.remove('active-no', 'active-ok');
+                    if(type === 'ok' && bok) bok.classList.add('active-ok');
+                    if(type === 'no' && bno) bno.classList.add('active-no');
+                }
+                localVotes[sid] = { type, ts: Date.now() };
+                setTimeout(()=>{ if(localVotes[sid] && Date.now()-localVotes[sid].ts>3000) delete localVotes[sid]; }, 3500);
+                db.ref(`rooms/${myRoomCode}/votes/${sid}/${myName}`).set(type).catch(e=>console.error("vote error", e));
+            };
+            votesRef = db.ref(`rooms/${myRoomCode}/votes`);
+            votesListener = function(vsnap) {
+                const all = vsnap.val() || {};
+                Object.keys(all).forEach(sid => {
+                    const vObj = all[sid] || {};
+                    const v = Object.values(vObj);
+                    const el = document.getElementById(`vcount-${sid}`);
+                    if(el) el.innerText = `✔${v.filter(x=>x==='ok').length} ✖${v.filter(x=>x==='no').length}`;
+                    const card = document.getElementById(`card-${sid}`);
+                    if(card) {
+                        const bno = card.querySelector('button[data-type="no"]');
+                        const bok = card.querySelector('button[data-type="ok"]');
+                        if(bno) bno.classList.remove('active-no', 'active-ok');
+                        if(bok) bok.classList.remove('active-no', 'active-ok');
+                        const dbMyVote = vObj[myName];
+                        const opt = localVotes[sid] && (Date.now()-localVotes[sid].ts < 3500) ? localVotes[sid].type : null;
+                        const resolved = dbMyVote || opt || null;
+                        if(resolved === 'ok' && bok) bok.classList.add('active-ok');
+                        else if(resolved === 'no' && bno) bno.classList.add('active-no');
+                    }
+                });
+            };
+            votesRef.on('value', votesListener);
         });
-    }
-
-    function vote(t, c, type, btn) {
-        const sid = `${c.replace(/\s/g,'_')}_${t.replace(/\s/g,'_')}`;
-        btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active-ok', 'active-no'));
-        btn.classList.add(type === 'ok' ? 'active-ok' : 'active-no');
-        db.ref(`rooms/${myRoomCode}/votes/${sid}/${myName}`).set(type);
     }
 
     async function showLeaderboard() {
@@ -310,19 +513,32 @@
         Object.keys(vts).forEach(vid => { 
             const parts = vid.split('_');
             const target = parts[parts.length-1].replace(/_/g, ' '); 
-            const v = Object.values(vts[vid]); 
+            const v = Object.values(vts[vid] || {}); 
             if(v.filter(x=>x==='ok').length >= v.filter(x=>x==='no').length) scores[target] = (scores[target] || 0) + 10; 
         });
         document.getElementById('final-ranks').innerHTML = Object.entries(scores).sort((a,b)=>b[1]-a[1]).map(s => `<div class="row-item"><span>${s[0]}</span><b>${s[1]} P</b></div>`).join('');
         confetti(); nav('sc-results');
     }
 
-    function resetGame(ask) {
-        if(ask && !confirm(curLang === 'tr' ? "Çıkış?" : "Exit?")) return;
-        try { if(myRoomCode) db.ref(`rooms/${myRoomCode}/players/${myName}`).remove(); } catch(e){}
-        location.reload();
+    function goToRoomLobby() {
+        clearInterval(timerInt);
+        if(!prevRoomRef) listenRoom();
+        document.getElementById('lobby-admin-controls').classList.toggle('hidden', !isAdmin);
+        document.getElementById('lobby-waiting').classList.toggle('hidden', isAdmin);
+        nav('sc-lobby');
     }
+
+    async function goToMainMenu(confirmFirst) {
+        if(confirmFirst) {
+            const res = await showConfirm();
+            if(res !== 'yes') return;
+        }
+        clearInterval(timerInt);
+        try{ if(prevRoomRef) { prevRoomRef.off(); } }catch(e){}
+        nav('sc-main');
+    }
+
+    updateUILanguage();
 </script>
 </body>
 </html>
-
