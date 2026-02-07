@@ -15,9 +15,10 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; outline: none; touch-action: manipulation; }
         body, html { height: 100%; width: 100%; background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; overflow: hidden; position: fixed; }
         
+        /* Banner için alttan boşluk bıraktık */
         #app { 
             width: 96%; max-width: 420px; 
-            height: calc(100vh - 80px); 
+            height: calc(100vh - 80px); /* Banner payı */
             margin-top: 20px; 
             background: var(--glass); backdrop-filter: blur(25px); 
             border: 2px solid var(--border); border-radius: 25px; padding: 20px; 
@@ -157,19 +158,19 @@
             return;
         }
 
-        // 1. BANNER REKLAM (Alt kısım) - Google Test ID (Android)
+        // 1. BANNER REKLAM
         admob.banner.config({
             id: 'ca-app-pub-3940256099942544/6300978111', 
             autoShow: true,
-            overlap: false 
+            overlap: false
         });
         admob.banner.prepare();
 
-        // 2. ÖDÜLLÜ REKLAM (Video) - Google Test ID (Android)
+        // 2. ÖDÜLLÜ REKLAM
         admob.rewardvideo.config({
             id: 'ca-app-pub-3940256099942544/5224354917'
         });
-        admob.rewardvideo.prepare(); 
+        admob.rewardvideo.prepare();
     }
 
     // --- FIREBASE AYARLARI ---
@@ -207,25 +208,31 @@
         return catMapENtoTR[c] || c;
     }
 
-    document.getElementById('create-room-trigger').addEventListener('click', () => {
+    // --- REKLAMLI ODA KURMA DÜZENLENMİŞ ---
+    document.getElementById('create-room-trigger').addEventListener('click', async () => {
         const inputName = document.getElementById('p-name').value.trim();
         if(!inputName) return alert(curLang === 'tr' ? "İsim giriniz!" : "Enter name!");
 
-        if (typeof admob !== 'undefined') {
-            const loadingOv = document.getElementById('ad-loading-overlay');
-            loadingOv.classList.remove('hidden');
+        const loadingOv = document.getElementById('ad-loading-overlay');
 
-            admob.rewardvideo.show().then(() => {
-                loadingOv.classList.add('hidden');
-                admob.rewardvideo.prepare();
+        if (typeof admob !== 'undefined') {
+            loadingOv.classList.remove('hidden');
+            
+            try {
+                // Reklamı göster
+                await admob.rewardvideo.show();
+                // Reklam başarıyla izlendi/kapandıysa odayı kur
                 initRoom(true);
-            }).catch(e => {
+            } catch (e) {
+                console.log("Reklam gösterim hatası veya hazır değil:", e);
+                // Reklam hazır değilse bile kullanıcıyı bekletmeden devam ettir (Fallback)
+                initRoom(true);
+            } finally {
                 loadingOv.classList.add('hidden');
-                console.log("Reklam hatası:", e);
-                initRoom(true); 
-                admob.rewardvideo.prepare();
-            });
+                admob.rewardvideo.prepare(); // Bir sonraki kullanım için hazırla
+            }
         } else {
+            // Tarayıcı ortamı
             initRoom(true);
         }
     });
@@ -436,7 +443,7 @@
                 const card = document.getElementById(`card-${sid}`);
                 if(card) {
                     const bno = card.querySelector('button[data-type="no"]'), bok = card.querySelector('button[data-type="ok"]');
-                    if(bno) bno.classList.remove('active-no'); if(bok) bok.classList.add('active-ok');
+                    if(bno) bno.classList.remove('active-no'); if(bok) bok.classList.remove('active-ok');
                     if(type === 'ok' && bok) bok.classList.add('active-ok'); if(type === 'no' && bno) bno.classList.add('active-no');
                 }
                 localVotes[sid] = type;
