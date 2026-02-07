@@ -16,11 +16,10 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; outline: none; touch-action: manipulation; }
         body, html { height: 100%; width: 100%; background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; overflow: hidden; position: fixed; }
         
-        /* OYUN ALANI DÜZENİ */
         #app { 
             width: 96%; max-width: 420px; 
-            height: calc(100vh - 130px); /* Üst ve alt reklam payı */
-            margin-top: 65px; /* Üst reklam boşluğu */
+            height: calc(100vh - 130px); 
+            margin-top: 65px; 
             background: var(--glass); backdrop-filter: blur(25px); 
             border: 2px solid var(--border); border-radius: 25px; padding: 20px; 
             display: flex; flex-direction: column; position: relative; 
@@ -28,20 +27,23 @@
             box-shadow: 0 0 40px rgba(0,0,0,0.8); 
         }
 
-        .menu-btn { background: rgba(255, 255, 255, 0.08); border: 1px solid var(--border); color: #fff; padding: 14px; border-radius: 18px; font-size: 14px; font-weight: 800; cursor: pointer; margin-bottom: 10px; width: 100%; display: block; text-transform: uppercase; transition: 0.2s; text-align: center; }
+        .menu-btn { background: rgba(255, 255, 255, 0.08); border: 1px solid var(--border); color: #fff; padding: 14px; border-radius: 18px; font-size: 14px; font-weight: 800; cursor: pointer; margin-bottom: 10px; width: 100%; display: block; text-transform: uppercase; transition: 0.2s; text-align: center; flex-shrink: 0; }
         .menu-btn:active { background: var(--neon); color: #000; transform: scale(0.96); }
         .btn-main { background: var(--neon); color: #000 !important; border: none; box-shadow: 0 0 15px rgba(0,242,255,0.4); }
-        .btn-back { background: rgba(255,0,85,0.15); color: #ff0055; border: 1px solid #ff0055; margin-top: auto; }
-        .logo { font-size: 26px; font-weight: 900; text-align: center; margin-bottom: 20px; text-shadow: 0 0 15px var(--neon); letter-spacing: 2px; }
-        .screen { display: flex; flex-direction: column; height: 100%; width: 100%; animation: fadeIn 0.2s ease-out; }
+        .btn-back { background: rgba(255,0,85,0.15); color: #ff0055; border: 1px solid #ff0055; }
+        .logo { font-size: 26px; font-weight: 900; text-align: center; margin-bottom: 20px; text-shadow: 0 0 15px var(--neon); letter-spacing: 2px; flex-shrink: 0; }
+        
+        .screen { display: flex; flex-direction: column; height: 100%; width: 100%; animation: fadeIn 0.2s ease-out; overflow: hidden; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .scroll-v { flex: 1; overflow-y: auto; margin: 5px 0; padding-right: 5px; scrollbar-width: none; }
+        
+        /* KAYDIRILABİLİR ALAN - Butonları aşağı iten asıl kısım */
+        .scroll-v { flex: 1; overflow-y: auto; margin: 5px 0; padding-right: 5px; scrollbar-width: none; min-height: 0; }
+        
         .input-box { width: 100%; background: rgba(0,0,0,0.6); border: 1px solid var(--border); padding: 12px; border-radius: 15px; color: white; margin-bottom: 12px; text-align: center; font-size: 16px; }
         .row-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 15px; margin-bottom: 6px; border: 1px solid rgba(255,255,255,0.05); }
         .vote-card { background: rgba(255,255,255,0.05); padding: 12px; border-radius: 18px; margin-bottom: 8px; border: 1px solid var(--border); }
         .hidden { display: none !important; }
         
-        /* Renk Sınıfları */
         .active-ok { background: var(--win) !important; color: #000 !important; box-shadow: 0 0 15px rgba(0,255,136,0.4); border: 1px solid var(--win) !important; transition: none !important; }
         .active-no { background: #ff0055 !important; color: #fff !important; box-shadow: 0 0 15px rgba(255,0,85,0.4); border: 1px solid #ff0055 !important; transition: none !important; }
 
@@ -51,26 +53,10 @@
         .confirm-row { display:flex; gap:8px; justify-content:space-between; }
         .confirm-row .menu-btn { flex:1; margin:0; }
 
-        /* REKLAM ALANLARI - GÖRÜNÜRLÜK İÇİN Z-INDEX VE BACKGROUND EKLENDİ */
-        .ad-top-fixed { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 60px; 
-            background: #f0f0f0; /* Test için görünür renk */
-            z-index: 99999; 
-            display: flex; justify-content: center; align-items: center; 
-            border-bottom: 1px solid var(--neon); 
-            color: #000; font-size: 10px; font-weight: bold;
-        }
-        .ad-bottom-fixed { 
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; 
-            background: #f0f0f0; /* Test için görünür renk */
-            z-index: 99999; 
-            display: flex; justify-content: center; align-items: center; 
-            border-top: 1px solid var(--neon); 
-            color: #000; font-size: 10px; font-weight: bold;
-        }
+        .ad-top-fixed { position: fixed; top: 0; left: 0; width: 100%; height: 60px; background: #f0f0f0; z-index: 99999; display: flex; justify-content: center; align-items: center; border-bottom: 1px solid var(--neon); color: #000; font-size: 10px; font-weight: bold; }
+        .ad-bottom-fixed { position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: #f0f0f0; z-index: 99999; display: flex; justify-content: center; align-items: center; border-top: 1px solid var(--neon); color: #000; font-size: 10px; font-weight: bold; }
         .ad-inline-box { width: 100%; min-height: 80px; background: rgba(255,255,255,0.1); margin-top: 15px; display: flex; justify-content: center; align-items: center; border: 1px dashed rgba(255,255,255,0.3); border-radius: 15px; overflow: hidden; }
 
-        /* TAM EKRAN REKLAM OVERLAY */
         #ad-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         #ad-content-box { width: 320px; height: 250px; background: #222; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; border: 1px solid #444; }
         #ad-timer-text { font-size: 18px; color: #fff; margin-bottom: 20px; }
@@ -80,10 +66,7 @@
 
 <div class="ad-top-fixed">
     TEST AD SPACE (TOP)
-    <ins class="adsbygoogle"
-         style="display:inline-block;width:320px;height:50px; position:absolute;"
-         data-ad-client="ca-pub-3940256099942544"
-         data-ad-slot="6300978111"></ins>
+    <ins class="adsbygoogle" style="display:inline-block;width:320px;height:50px; position:absolute;" data-ad-client="ca-pub-3940256099942544" data-ad-slot="6300978111"></ins>
     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
 </div>
 
@@ -96,21 +79,15 @@
             <button id="create-room-trigger" class="menu-btn btn-main" data-lang="create">OPEN ROOM</button>
             <button class="menu-btn" id="join-nav-btn" data-lang="join">KATIL</button>
             <button class="menu-btn" id="settings-nav-btn" data-lang="settings">⚙️ AYARLAR</button>
-
             <div class="ad-inline-box">
-                 <ins class="adsbygoogle"
-                     style="display:block; width:100%; height:100%;"
-                     data-ad-format="fluid"
-                     data-ad-layout-key="-fb+5w+4e-db+86"
-                     data-ad-client="ca-pub-3940256099942544"
-                     data-ad-slot="6300978111"></ins>
+                 <ins class="adsbygoogle" style="display:block; width:100%; height:100%;" data-ad-format="fluid" data-ad-layout-key="-fb+5w+4e-db+86" data-ad-client="ca-pub-3940256099942544" data-ad-slot="6300978111"></ins>
                 <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
             </div>
         </div>
     </div>
 
     <div id="sc-game" class="screen hidden">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-shrink:0;">
             <div id="let" style="font-size:36px; font-weight:900; color:var(--neon);">A</div>
             <div id="timer" style="font-size:24px; font-weight:bold;">60</div>
         </div>
@@ -120,45 +97,53 @@
     </div>
 
     <div id="sc-lobby" class="screen hidden">
-        <div style="text-align:center;"><small data-lang="room_code">KOD:</small> <b id="display-code" style="color:var(--neon)">-</b></div>
-        <div id="lobby-myname" style="text-align:center; margin:8px 0; color:var(--neon); font-weight:800;"></div>
-        <div class="scroll-v" id="lobby-players"></div>
-        <div id="lobby-cats" style="max-height:100px; overflow-y:auto; border:1px solid var(--border); border-radius:15px; padding:10px; margin-bottom:10px;"></div>
-
-        <div id="lobby-admin-controls" class="hidden">
-            <small><span data-lang="time_label">SÜRE</span>: <span id="time-val">60</span>s</small>
-            <input type="range" id="time-slider" min="30" max="240" step="10" value="60" oninput="document.getElementById('time-val').innerText = this.value" style="width:100%; margin:10px 0;">
-            <div style="display:flex; gap:5px; margin-bottom:10px;">
-                <input type="text" id="cat-in" class="input-box" style="margin:0; flex:1;" data-lang-placeholder="cat_placeholder" placeholder="KATEGORİ">
-                <button id="add-cat-btn" class="menu-btn btn-main" style="margin:0; width:45px;">+</button>
+        <div style="text-align:center; flex-shrink:0;"><small data-lang="room_code">KOD:</small> <b id="display-code" style="color:var(--neon)">-</b></div>
+        <div id="lobby-myname" style="text-align:center; margin:8px 0; color:var(--neon); font-weight:800; flex-shrink:0;"></div>
+        
+        <div class="scroll-v">
+            <div id="lobby-players"></div>
+            <div id="lobby-cats" style="max-height:150px; overflow-y:auto; border:1px solid var(--border); border-radius:15px; padding:10px; margin-bottom:10px;"></div>
+            
+            <div id="lobby-admin-controls" class="hidden">
+                <small><span data-lang="time_label">SÜRE</span>: <span id="time-val">60</span>s</small>
+                <input type="range" id="time-slider" min="30" max="240" step="10" value="60" oninput="document.getElementById('time-val').innerText = this.value" style="width:100%; margin:10px 0;">
+                <div style="display:flex; gap:5px; margin-bottom:10px;">
+                    <input type="text" id="cat-in" class="input-box" style="margin:0; flex:1;" data-lang-placeholder="cat_placeholder" placeholder="KATEGORİ">
+                    <button id="add-cat-btn" class="menu-btn btn-main" style="margin:0; width:45px;">+</button>
+                </div>
+                <button id="start-game-btn" class="menu-btn btn-main" data-lang="start">BAŞLAT</button>
             </div>
-            <button id="start-game-btn" class="menu-btn btn-main" data-lang="start">BAŞLAT</button>
+            <div id="lobby-waiting" class="hidden" style="text-align:center; padding:20px; color:var(--neon);" data-lang="waiting">BEKLENİYOR...</div>
         </div>
-        <div id="lobby-waiting" class="hidden" style="text-align:center; padding:20px; color:var(--neon);" data-lang="waiting">BEKLENİYOR...</div>
+        
         <button id="leave-btn" class="menu-btn btn-back" data-lang="menu">AYRIL / ÇIKIŞ</button>
     </div>
 
     <div id="sc-settings" class="screen hidden">
-        <h3 style="text-align:center; color:var(--neon); margin-bottom:20px;" data-lang="settings">AYARLAR</h3>
-        <button id="lang-btn" class="menu-btn btn-main">DİL: TR</button>
+        <h3 style="text-align:center; color:var(--neon); margin-bottom:20px; flex-shrink:0;" data-lang="settings">AYARLAR</h3>
+        <div class="scroll-v">
+            <button id="lang-btn" class="menu-btn btn-main">DİL: TR</button>
+        </div>
         <button class="menu-btn" id="settings-back-btn" data-lang="back">GERİ</button>
     </div>
 
     <div id="sc-join" class="screen hidden">
-        <h3 style="text-align:center; margin-bottom:20px;" data-lang="join_title">ODAYA KATIL</h3>
-        <input type="text" id="join-code" class="input-box" data-lang-placeholder="code_placeholder" placeholder="ODA KODU" style="text-transform:uppercase;">
-        <button id="join-room-btn" class="menu-btn btn-main" data-lang="join">KATIL</button>
+        <h3 style="text-align:center; margin-bottom:20px; flex-shrink:0;" data-lang="join_title">ODAYA KATIL</h3>
+        <div class="scroll-v">
+            <input type="text" id="join-code" class="input-box" data-lang-placeholder="code_placeholder" placeholder="ODA KODU" style="text-transform:uppercase;">
+            <button id="join-room-btn" class="menu-btn btn-main" data-lang="join">KATIL</button>
+        </div>
         <button class="menu-btn" id="join-back-btn" data-lang="back">GERİ</button>
     </div>
 
     <div id="sc-review" class="screen hidden">
-        <h3 style="text-align:center; color:var(--neon); margin-bottom:10px;" data-lang="review_title">OYLAMA</h3>
+        <h3 style="text-align:center; color:var(--neon); margin-bottom:10px; flex-shrink:0;" data-lang="review_title">OYLAMA</h3>
         <div class="scroll-v" id="all-reviews-list"></div>
         <button id="admin-results-btn" class="menu-btn btn-main hidden" data-lang="see_results">SONUÇLAR</button>
     </div>
 
     <div id="sc-results" class="screen hidden">
-        <h3 style="text-align:center; color:var(--neon);" data-lang="results">🏆 SKORLAR</h3>
+        <h3 style="text-align:center; color:var(--neon); flex-shrink:0;" data-lang="results">🏆 SKORLAR</h3>
         <div class="scroll-v" id="final-ranks"></div>
         <button class="menu-btn btn-main" id="results-back-btn" data-lang="back">LOBİYE DÖN</button>
     </div>
@@ -178,10 +163,7 @@
 <div id="ad-overlay" class="hidden">
     <div style="color:#fff; margin-bottom:10px;">ODA OLUŞTURULUYOR...</div>
     <div id="ad-content-box">
-         <ins class="adsbygoogle"
-         style="display:inline-block;width:300px;height:250px"
-         data-ad-client="ca-pub-3940256099942544"
-         data-ad-slot="6300978111"></ins>
+         <ins class="adsbygoogle" style="display:inline-block;width:300px;height:250px" data-ad-client="ca-pub-3940256099942544" data-ad-slot="6300978111"></ins>
          <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
     <div id="ad-timer-text">Reklam: 5</div>
@@ -190,10 +172,7 @@
 
 <div class="ad-bottom-fixed">
     TEST AD SPACE (BOTTOM)
-    <ins class="adsbygoogle"
-         style="display:inline-block;width:320px;height:50px; position:absolute;"
-         data-ad-client="ca-pub-3940256099942544"
-         data-ad-slot="6300978111"></ins>
+    <ins class="adsbygoogle" style="display:inline-block;width:320px;height:50px; position:absolute;" data-ad-client="ca-pub-3940256099942544" data-ad-slot="6300978111"></ins>
     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
 </div>
 
@@ -215,7 +194,7 @@
         currentLetter = "", localTime = 60, currentStatus = "", prevRoomRef = null;
 
     let votesRef = null, votesListener = null;
-    const localVotes = {}; // Cache for instant feedback
+    const localVotes = {}; 
     let confirmOpen = false;
 
     const langDict = {
@@ -235,32 +214,19 @@
     document.getElementById('create-room-trigger').addEventListener('click', () => {
         const inputName = document.getElementById('p-name').value.trim();
         if(!inputName) return alert(curLang === 'tr' ? "İsim giriniz!" : "Enter name!");
-        
         const overlay = document.getElementById('ad-overlay');
         const skipBtn = document.getElementById('ad-skip-btn');
         const timerText = document.getElementById('ad-timer-text');
-        
         overlay.classList.remove('hidden');
         skipBtn.classList.add('hidden');
-        
         let timeLeft = 5;
         timerText.innerText = "Reklam: " + timeLeft;
-        
         const adInterval = setInterval(() => {
             timeLeft--;
-            if(timeLeft > 0) {
-                timerText.innerText = "Reklam: " + timeLeft;
-            } else {
-                clearInterval(adInterval);
-                timerText.innerText = "";
-                skipBtn.classList.remove('hidden');
-            }
+            if(timeLeft > 0) { timerText.innerText = "Reklam: " + timeLeft; } 
+            else { clearInterval(adInterval); timerText.innerText = ""; skipBtn.classList.remove('hidden'); }
         }, 1000);
-        
-        skipBtn.onclick = function() {
-            overlay.classList.add('hidden');
-            initRoom(true);
-        };
+        skipBtn.onclick = function() { overlay.classList.add('hidden'); initRoom(true); };
     });
 
     document.getElementById('join-nav-btn').addEventListener('click', () => nav('sc-join'));
@@ -274,7 +240,7 @@
     document.getElementById('back-from-game').addEventListener('click', () => onBackFromGame());
     document.getElementById('lang-btn').addEventListener('click', () => switchLang());
     document.getElementById('admin-results-btn').addEventListener('click', () => showLeaderboard());
-    document.getElementById('start-game-btn').addEventListener('click', () => { if(!isAdmin) return alert(curLang==='tr' ? "Yalnızca yönetici başlatabilir." : "Only admin can start."); startGameTrigger(); });
+    document.getElementById('start-game-btn').addEventListener('click', () => { if(!isAdmin) return; startGameTrigger(); });
     document.getElementById('finish-btn').addEventListener('click', submitAnswers);
 
     function updateUILanguage() {
@@ -309,23 +275,15 @@
         document.body.style.pointerEvents = 'none'; modal.style.pointerEvents = 'auto';
         const yes = document.getElementById('confirm-yes'), no = document.getElementById('confirm-no');
         return new Promise(res => {
-            const cleanup = (val) => {
-                yes.onclick = null; no.onclick = null;
-                modal.classList.add('hidden'); modal.setAttribute('aria-hidden','true');
-                document.body.style.pointerEvents = '';
-                confirmOpen = false;
-                res(val);
-            };
-            yes.onclick = () => cleanup('yes');
-            no.onclick = () => cleanup('no');
+            const cleanup = (val) => { yes.onclick = null; no.onclick = null; modal.classList.add('hidden'); modal.setAttribute('aria-hidden','true'); document.body.style.pointerEvents = ''; confirmOpen = false; res(val); };
+            yes.onclick = () => cleanup('yes'); no.onclick = () => cleanup('no');
         });
     }
 
     async function initRoom(host) {
         const inputName = document.getElementById('p-name').value.trim().toUpperCase();
         if(!inputName) return alert(curLang === 'tr' ? "İsim?" : "Name?");
-        myName = inputName;
-        isAdmin = host;
+        myName = inputName; isAdmin = host;
         if(prevRoomRef) { try{ prevRoomRef.off(); }catch(e){} prevRoomRef = null; }
         currentStatus = "";
         if(host) {
@@ -334,11 +292,10 @@
             document.getElementById('lobby-myname').innerText = myName;
             document.getElementById('lobby-admin-controls').classList.remove('hidden');
             document.getElementById('lobby-waiting').classList.add('hidden');
-            db.ref('rooms/' + myRoomCode).set({ status: 'lobby', admin: myName, cats: currentCats, time: 60, letter: 'A', finishedCount: 0 }).catch(()=>{});
-            db.ref(`rooms/${myRoomCode}/players/${myName}`).set({ score: 0 }).catch(()=>{});
+            db.ref('rooms/' + myRoomCode).set({ status: 'lobby', admin: myName, cats: currentCats, time: 60, letter: 'A', finishedCount: 0 });
+            db.ref(`rooms/${myRoomCode}/players/${myName}`).set({ score: 0 });
             db.ref(`rooms/${myRoomCode}/players/${myName}`).onDisconnect().remove();
-            renderLobbyCats();
-            nav('sc-lobby');
+            renderLobbyCats(); nav('sc-lobby');
         } else {
             myRoomCode = document.getElementById('join-code').value.toUpperCase().trim();
             const snap = await db.ref('rooms/' + myRoomCode).once('value');
@@ -351,8 +308,7 @@
             document.getElementById('lobby-myname').innerText = myName;
             document.getElementById('lobby-admin-controls').classList.add('hidden');
             document.getElementById('lobby-waiting').classList.remove('hidden');
-            renderLobbyCats();
-            nav('sc-lobby');
+            renderLobbyCats(); nav('sc-lobby');
         }
         listenRoom();
     }
@@ -361,49 +317,28 @@
         if(!myRoomCode) return;
         const rRef = db.ref(`rooms/${myRoomCode}`);
         prevRoomRef = rRef;
-        try { rRef.off(); } catch(e) {}
         rRef.child('players').on('value', snap => {
             const val = snap.val() || {};
             roomPlayers = Object.keys(val);
             document.getElementById('lobby-players').innerHTML = roomPlayers.map(p => `<div class="row-item"><span>👤 ${p}</span></div>`).join('');
             const btn = document.getElementById('finish-btn');
             if(btn) btn.innerText = `${langDict[curLang].finish} (0/${roomPlayers.length || 0})`;
-            if(document.getElementById('lobby-myname') && myName) document.getElementById('lobby-myname').innerText = myName;
-            if(myName && !roomPlayers.includes(myName)) {
-                db.ref(`rooms/${myRoomCode}/players/${myName}`).set({ score: 0 });
-                db.ref(`rooms/${myRoomCode}/players/${myName}`).onDisconnect().remove();
-            }
+            if(myName && !roomPlayers.includes(myName)) { db.ref(`rooms/${myRoomCode}/players/${myName}`).set({ score: 0 }); db.ref(`rooms/${myRoomCode}/players/${myName}`).onDisconnect().remove(); }
         });
         rRef.child('status').on('value', s => {
-            const st = s.val();
-            if(st === currentStatus) return;
-            currentStatus = st;
+            const st = s.val(); if(st === currentStatus) return; currentStatus = st;
             if(st === 'playing') startGameUI();
             if(st === 'review') startReviewUI();
             if(st === 'results') showLeaderboard();
-            if(st === 'lobby') {
-                document.getElementById('lobby-admin-controls').classList.toggle('hidden', !isAdmin);
-                document.getElementById('lobby-waiting').classList.toggle('hidden', isAdmin);
-                nav('sc-lobby');
-            }
+            if(st === 'lobby') { document.getElementById('lobby-admin-controls').classList.toggle('hidden', !isAdmin); document.getElementById('lobby-waiting').classList.toggle('hidden', isAdmin); nav('sc-lobby'); }
         });
-        rRef.child('cats').on('value', snap => {
-            currentCats = snap.val() || [];
-            renderLobbyCats();
-            renderGameInputsLabels();
-        });
-        rRef.child('time').on('value', snap => {
-            localTime = snap.val() || 0;
-            if(document.getElementById('timer')) document.getElementById('timer').innerText = localTime;
-            if(localTime <= 0 && isAdmin && currentStatus === 'playing') db.ref(`rooms/${myRoomCode}`).update({ status: 'review' });
-        });
+        rRef.child('cats').on('value', snap => { currentCats = snap.val() || []; renderLobbyCats(); renderGameInputsLabels(); });
+        rRef.child('time').on('value', snap => { localTime = snap.val() || 0; if(document.getElementById('timer')) document.getElementById('timer').innerText = localTime; if(localTime <= 0 && isAdmin && currentStatus === 'playing') db.ref(`rooms/${myRoomCode}`).update({ status: 'review' }); });
         rRef.child('finishedCount').on('value', snap => {
             const count = snap.val() || 0;
             const btn = document.getElementById('finish-btn');
             if(btn) btn.innerText = `${langDict[curLang].finish} (${count}/${roomPlayers.length || 0})`;
-            if(roomPlayers.length > 0 && count >= roomPlayers.length && isAdmin && currentStatus === 'playing') {
-                db.ref(`rooms/${myRoomCode}`).update({ status: 'review' });
-            }
+            if(roomPlayers.length > 0 && count >= roomPlayers.length && isAdmin && currentStatus === 'playing') { db.ref(`rooms/${myRoomCode}`).update({ status: 'review' }); }
         });
     }
 
@@ -418,23 +353,12 @@
         if(!inputsArea) return;
         const children = Array.from(inputsArea.children || []);
         if(children.length === 0) return;
-        currentCats.forEach((c, i) => {
-            const child = children[i];
-            if(child) {
-                const small = child.querySelector('small');
-                if(small) small.innerText = displayCat(c);
-            }
-        });
+        currentCats.forEach((c, i) => { const child = children[i]; if(child) { const small = child.querySelector('small'); if(small) small.innerText = displayCat(c); } });
     }
 
     function startGameTrigger() {
         const letter = "ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ"[Math.floor(Math.random()*29)];
-        db.ref(`rooms/${myRoomCode}`).update({ 
-            status: 'playing', 
-            letter: letter, 
-            time: parseInt(document.getElementById('time-slider').value), 
-            finishedCount: 0, answers: null, votes: null
-        }).catch(e => console.error("startGame error", e));
+        db.ref(`rooms/${myRoomCode}`).update({ status: 'playing', letter: letter, time: parseInt(document.getElementById('time-slider').value), finishedCount: 0, answers: null, votes: null });
     }
 
     function startGameUI() {
@@ -448,58 +372,35 @@
                     <small style="color:var(--neon)">${displayCat(c)}</small>
                     <input type="text" id="ans-${c.replace(/\s/g,'_')}" class="input-box" style="text-align:left; margin:0; text-transform:uppercase;">
                 </div>`).join('');
-            const btn = document.getElementById('finish-btn');
-            btn.disabled = false; btn.style.opacity = "1";
+            const btn = document.getElementById('finish-btn'); btn.disabled = false; btn.style.opacity = "1";
             nav('sc-game');
-            if(isAdmin) {
-                clearInterval(timerInt);
-                timerInt = setInterval(() => {
-                    db.ref(`rooms/${myRoomCode}/time`).transaction(t => (t > 0) ? t - 1 : 0);
-                }, 1000);
-            }
-        }).catch(e => console.error("startGameUI error", e));
+            if(isAdmin) { clearInterval(timerInt); timerInt = setInterval(() => { db.ref(`rooms/${myRoomCode}/time`).transaction(t => (t > 0) ? t - 1 : 0); }, 1000); }
+        });
     }
 
     function submitAnswers() {
-        const btn = document.getElementById('finish-btn');
-        if(btn.disabled) return;
+        const btn = document.getElementById('finish-btn'); if(btn.disabled) return;
         const answers = {};
         currentCats.forEach(c => {
             const el = document.getElementById('ans-' + c.replace(/\s/g,'_'));
             const val = el ? el.value.trim().toUpperCase() : "";
-            if(val && currentLetter && val.startsWith(currentLetter)) answers[c] = val;
-            else answers[c] = "-";
+            if(val && currentLetter && val.startsWith(currentLetter)) answers[c] = val; else answers[c] = "-";
         });
         btn.disabled = true; btn.style.opacity = "0.5";
-        db.ref(`rooms/${myRoomCode}/answers/${myName}`).set(answers).then(() => {
-            db.ref(`rooms/${myRoomCode}/finishedCount`).transaction(c => (c || 0) + 1);
-        }).catch(e => {
-            db.ref(`rooms/${myRoomCode}/finishedCount`).transaction(c => (c || 0) + 1);
-        });
+        db.ref(`rooms/${myRoomCode}/answers/${myName}`).set(answers).then(() => { db.ref(`rooms/${myRoomCode}/finishedCount`).transaction(c => (c || 0) + 1); });
     }
 
     async function onBackFromGame() {
-        if (currentStatus === 'playing') {
-            const res = await showConfirm();
-            if(res !== 'yes') return;
-        }
+        if (currentStatus === 'playing') { const res = await showConfirm(); if(res !== 'yes') return; }
         clearInterval(timerInt);
-        if(isAdmin) db.ref(`rooms/${myRoomCode}`).update({ status: 'lobby' }).catch(e=>console.error("backToLobby update error", e));
-        if(!prevRoomRef) listenRoom();
-        document.getElementById('lobby-admin-controls').classList.toggle('hidden', !isAdmin);
-        document.getElementById('lobby-waiting').classList.toggle('hidden', isAdmin);
+        if(isAdmin) db.ref(`rooms/${myRoomCode}`).update({ status: 'lobby' });
         nav('sc-lobby');
     }
 
     function addCat() {
-        const cRaw = document.getElementById('cat-in').value.trim();
-        if(!cRaw) return;
+        const cRaw = document.getElementById('cat-in').value.trim(); if(!cRaw) return;
         const c = cRaw.toUpperCase();
-        if(c && !currentCats.includes(c)) {
-            currentCats.push(c);
-            db.ref(`rooms/${myRoomCode}/cats`).set(currentCats);
-            document.getElementById('cat-in').value = "";
-        }
+        if(c && !currentCats.includes(c)) { currentCats.push(c); db.ref(`rooms/${myRoomCode}/cats`).set(currentCats); document.getElementById('cat-in').value = ""; }
     }
     function removeCat(i) { currentCats.splice(i,1); db.ref(`rooms/${myRoomCode}/cats`).set(currentCats); }
 
@@ -527,68 +428,31 @@
             document.getElementById('all-reviews-list').innerHTML = html;
             if(isAdmin) document.getElementById('admin-results-btn').classList.remove('hidden');
             nav('sc-review');
-
             const list = document.getElementById('all-reviews-list');
             list.onclick = function(e) {
-                const btn = e.target.closest('button[data-sid]');
-                if(!btn) return;
-                e.preventDefault();
-                
-                const sid = btn.getAttribute('data-sid');
-                const type = btn.getAttribute('data-type');
-                
-                // --- FLICKER FIX: ANLIK GÖRSEL GÜNCELLEME (DB BEKLEMEDEN) ---
+                const btn = e.target.closest('button[data-sid]'); if(!btn) return;
+                const sid = btn.getAttribute('data-sid'), type = btn.getAttribute('data-type');
                 const card = document.getElementById(`card-${sid}`);
                 if(card) {
-                    const bno = card.querySelector('button[data-type="no"]');
-                    const bok = card.querySelector('button[data-type="ok"]');
-                    
-                    // Önce hepsini temizle, sonra yenisini ekle (Git gel yapmasın diye)
-                    if(bno) bno.classList.remove('active-no');
-                    if(bok) bok.classList.remove('active-ok');
-                    
-                    if(type === 'ok' && bok) bok.classList.add('active-ok');
-                    if(type === 'no' && bno) bno.classList.add('active-no');
+                    const bno = card.querySelector('button[data-type="no"]'), bok = card.querySelector('button[data-type="ok"]');
+                    if(bno) bno.classList.remove('active-no'); if(bok) bok.classList.remove('active-ok');
+                    if(type === 'ok' && bok) bok.classList.add('active-ok'); if(type === 'no' && bno) bno.classList.add('active-no');
                 }
-                
-                // Local cache for immediate validation in listener
                 localVotes[sid] = type;
-
-                db.ref(`rooms/${myRoomCode}/votes/${sid}/${myName}`).set(type).catch(e=>console.error("vote error", e));
+                db.ref(`rooms/${myRoomCode}/votes/${sid}/${myName}`).set(type);
             };
-
             votesRef = db.ref(`rooms/${myRoomCode}/votes`);
             votesListener = function(vsnap) {
                 const all = vsnap.val() || {};
                 Object.keys(all).forEach(sid => {
-                    const vObj = all[sid] || {};
-                    const v = Object.values(vObj);
-                    const el = document.getElementById(`vcount-${sid}`);
+                    const vObj = all[sid] || {}, v = Object.values(vObj), el = document.getElementById(`vcount-${sid}`);
                     if(el) el.innerText = `✔${v.filter(x=>x==='ok').length} ✖${v.filter(x=>x==='no').length}`;
-                    
                     const card = document.getElementById(`card-${sid}`);
                     if(card) {
-                        const bno = card.querySelector('button[data-type="no"]');
-                        const bok = card.querySelector('button[data-type="ok"]');
-                        
-                        const dbMyVote = vObj[myName];
-                        
-                        // FLICKER FIX: Eğer veritabanından gelen bilgi, kullanıcının az önce bastığı 
-                        // tuşla (localVotes) aynı değilse ve veritabanı boşsa, ekrana dokunma.
-                        // Sadece veritabanı doluysa ve farklıysa güncelle.
-                        
-                        let finalVote = dbMyVote;
-                        if (!finalVote && localVotes[sid]) finalVote = localVotes[sid];
-
-                        // ClassList Toggle kullanarak "reset" yapmadan geçiş sağla
-                        if (bok) {
-                            if (finalVote === 'ok') bok.classList.add('active-ok');
-                            else bok.classList.remove('active-ok');
-                        }
-                        if (bno) {
-                            if (finalVote === 'no') bno.classList.add('active-no');
-                            else bno.classList.remove('active-no');
-                        }
+                        const bno = card.querySelector('button[data-type="no"]'), bok = card.querySelector('button[data-type="ok"]');
+                        let finalVote = vObj[myName] || localVotes[sid];
+                        if (bok) { if (finalVote === 'ok') bok.classList.add('active-ok'); else bok.classList.remove('active-ok'); }
+                        if (bno) { if (finalVote === 'no') bno.classList.add('active-no'); else bno.classList.remove('active-no'); }
                     }
                 });
             };
@@ -602,33 +466,18 @@
         const vts = snap.val().votes || {};
         let scores = {}; roomPlayers.forEach(p => scores[p] = 0);
         Object.keys(vts).forEach(vid => { 
-            const parts = vid.split('_');
-            const target = parts[parts.length-1].replace(/_/g, ' '); 
-            const v = Object.values(vts[vid] || {}); 
+            const parts = vid.split('_'), target = parts[parts.length-1].replace(/_/g, ' '), v = Object.values(vts[vid] || {}); 
             if(v.filter(x=>x==='ok').length >= v.filter(x=>x==='no').length) scores[target] = (scores[target] || 0) + 10; 
         });
         document.getElementById('final-ranks').innerHTML = Object.entries(scores).sort((a,b)=>b[1]-a[1]).map(s => `<div class="row-item"><span>${s[0]}</span><b>${s[1]} P</b></div>`).join('');
         confetti(); nav('sc-results');
     }
 
-    function goToRoomLobby() {
-        clearInterval(timerInt);
-        if(!prevRoomRef) listenRoom();
-        document.getElementById('lobby-admin-controls').classList.toggle('hidden', !isAdmin);
-        document.getElementById('lobby-waiting').classList.toggle('hidden', isAdmin);
-        nav('sc-lobby');
-    }
-
+    function goToRoomLobby() { clearInterval(timerInt); nav('sc-lobby'); }
     async function goToMainMenu(confirmFirst) {
-        if(confirmFirst) {
-            const res = await showConfirm();
-            if(res !== 'yes') return;
-        }
-        clearInterval(timerInt);
-        try{ if(prevRoomRef) { prevRoomRef.off(); } }catch(e){}
-        nav('sc-main');
+        if(confirmFirst) { const res = await showConfirm(); if(res !== 'yes') return; }
+        clearInterval(timerInt); try{ if(prevRoomRef) { prevRoomRef.off(); } }catch(e){} nav('sc-main');
     }
-
     updateUILanguage();
 </script>
 </body>
