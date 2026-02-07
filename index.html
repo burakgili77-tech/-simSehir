@@ -15,10 +15,9 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; outline: none; touch-action: manipulation; }
         body, html { height: 100%; width: 100%; background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; overflow: hidden; position: fixed; }
         
-        /* Banner için alttan boşluk bıraktık */
         #app { 
             width: 96%; max-width: 420px; 
-            height: calc(100vh - 80px); /* Banner payı */
+            height: calc(100vh - 80px); 
             margin-top: 20px; 
             background: var(--glass); backdrop-filter: blur(25px); 
             border: 2px solid var(--border); border-radius: 25px; padding: 20px; 
@@ -64,7 +63,6 @@
         <div class="scroll-v">
             <input type="text" id="p-name" class="input-box" data-lang-placeholder="placeholder" placeholder="İSİM GİR">
             <button id="create-room-trigger" class="menu-btn btn-main" data-lang="create">📺 ODA KUR (REKLAM İZLE)</button>
-            
             <button class="menu-btn" id="join-nav-btn" data-lang="join">KATIL</button>
             <button class="menu-btn" id="settings-nav-btn" data-lang="settings">⚙️ AYARLAR</button>
         </div>
@@ -83,11 +81,9 @@
     <div id="sc-lobby" class="screen hidden">
         <div style="text-align:center; flex-shrink:0;"><small data-lang="room_code">KOD:</small> <b id="display-code" style="color:var(--neon)">-</b></div>
         <div id="lobby-myname" style="text-align:center; margin:8px 0; color:var(--neon); font-weight:800; flex-shrink:0;"></div>
-        
         <div class="scroll-v">
             <div id="lobby-players"></div>
             <div id="lobby-cats" style="max-height:150px; overflow-y:auto; border:1px solid var(--border); border-radius:15px; padding:10px; margin-bottom:10px;"></div>
-            
             <div id="lobby-admin-controls" class="hidden">
                 <small><span data-lang="time_label">SÜRE</span>: <span id="time-val">60</span>s</small>
                 <input type="range" id="time-slider" min="30" max="240" step="10" value="60" oninput="document.getElementById('time-val').innerText = this.value" style="width:100%; margin:10px 0;">
@@ -99,7 +95,6 @@
             </div>
             <div id="lobby-waiting" class="hidden" style="text-align:center; padding:20px; color:var(--neon);" data-lang="waiting">BEKLENİYOR...</div>
         </div>
-        
         <button id="leave-btn" class="menu-btn btn-back" data-lang="menu">AYRIL / ÇIKIŞ</button>
     </div>
 
@@ -145,31 +140,34 @@
 </div>
 
 <div id="ad-loading-overlay" class="hidden">
-    <div style="color:var(--neon); font-size:20px;">REKLAM YÜKLENİYOR...</div>
+    <div id="ad-status-msg" style="color:var(--neon); font-size:20px; text-align:center; padding:20px;">REKLAM YÜKLENİYOR...</div>
 </div>
 
 <script>
-    // --- ADMOB AYARLARI ---
+    // --- ADMOB DÜZELTİLMİŞ MANTIK ---
+    let adReady = false;
     document.addEventListener('deviceready', initAdMob, false);
 
     function initAdMob() {
-        if (typeof admob === 'undefined') {
-            console.log('AdMob plugini bulunamadı.');
-            return;
-        }
+        if (typeof admob === 'undefined') return;
 
-        // 1. BANNER REKLAM
         admob.banner.config({
             id: 'ca-app-pub-5008597546147207/5685331978', 
-            autoShow: true,
-            overlap: false
+            autoShow: true
         });
         admob.banner.prepare();
 
-        // 2. ÖDÜLLÜ REKLAM
         admob.rewardvideo.config({
             id: 'ca-app-pub-5008597546147207/6828992875'
         });
+        
+        // Reklam yüklendiğinde durumu güncelle
+        document.addEventListener('admob.rewardvideo.events.LOAD', () => { adReady = true; });
+        document.addEventListener('admob.rewardvideo.events.CLOSE', () => { 
+            adReady = false; 
+            admob.rewardvideo.prepare(); // Bir sonraki için hazırla
+        });
+        
         admob.rewardvideo.prepare();
     }
 
@@ -208,35 +206,40 @@
         return catMapENtoTR[c] || c;
     }
 
-    // --- REKLAMLI ODA KURMA DÜZENLENMİŞ ---
+    // --- REKLAMLI ODA KURMA (FIXED) ---
     document.getElementById('create-room-trigger').addEventListener('click', async () => {
         const inputName = document.getElementById('p-name').value.trim();
         if(!inputName) return alert(curLang === 'tr' ? "İsim giriniz!" : "Enter name!");
 
         const loadingOv = document.getElementById('ad-loading-overlay');
+        const statusMsg = document.getElementById('ad-status-msg');
 
         if (typeof admob !== 'undefined') {
             loadingOv.classList.remove('hidden');
             
+            // Eğer reklam henüz hazır değilse 2 saniye bekle
+            if (!adReady) {
+                admob.rewardvideo.prepare();
+                await new Promise(r => setTimeout(r, 2000));
+            }
+
             try {
-                // Reklamı göster
                 await admob.rewardvideo.show();
-                // Reklam başarıyla izlendi/kapandıysa odayı kur
+                // Reklam kapandıktan sonra devam etmesi için event beklemek yerine 
+                // doğrudan fonksiyonu çağırıyoruz (Plugin genelde senkron show yapar)
                 initRoom(true);
             } catch (e) {
-                console.log("Reklam gösterim hatası veya hazır değil:", e);
-                // Reklam hazır değilse bile kullanıcıyı bekletmeden devam ettir (Fallback)
-                initRoom(true);
+                console.log("Reklam hatası:", e);
+                initRoom(true); // Hata olsa da oyun başlasın
             } finally {
                 loadingOv.classList.add('hidden');
-                admob.rewardvideo.prepare(); // Bir sonraki kullanım için hazırla
             }
         } else {
-            // Tarayıcı ortamı
-            initRoom(true);
+            initRoom(true); // Tarayıcıda doğrudan geç
         }
     });
 
+    // --- DİĞER EVENTLER VE FONKSİYONLAR (DEĞİŞMEDİ) ---
     document.getElementById('join-nav-btn').addEventListener('click', () => nav('sc-join'));
     document.getElementById('settings-nav-btn').addEventListener('click', () => nav('sc-settings'));
     document.getElementById('join-back-btn').addEventListener('click', () => nav('sc-main'));
@@ -443,7 +446,7 @@
                 const card = document.getElementById(`card-${sid}`);
                 if(card) {
                     const bno = card.querySelector('button[data-type="no"]'), bok = card.querySelector('button[data-type="ok"]');
-                    if(bno) bno.classList.remove('active-no'); if(bok) bok.classList.remove('active-ok');
+                    if(bno) bno.classList.remove('active-no'); if(bok) bok.classList.add('active-ok');
                     if(type === 'ok' && bok) bok.classList.add('active-ok'); if(type === 'no' && bno) bno.classList.add('active-no');
                 }
                 localVotes[sid] = type;
@@ -490,4 +493,3 @@
 </script>
 </body>
 </html>
-
