@@ -140,38 +140,65 @@
 </div>
 
 <div id="ad-loading-overlay" class="hidden">
-    <div id="ad-status-msg" style="color:var(--neon); font-size:20px; text-align:center; padding:20px;">REKLAM YÜKLENİYOR...</div>
+    <div id="ad-status-text" style="color:var(--neon); font-size:18px; text-align:center;">REKLAM HAZIRLANIYOR...</div>
 </div>
 
 <script>
-    // --- ADMOB DÜZELTİLMİŞ MANTIK ---
-    let adReady = false;
-    document.addEventListener('deviceready', initAdMob, false);
-
-    function initAdMob() {
+    // --- ADMOB MOTORU (TAMİR EDİLDİ) ---
+    let isAdLoaded = false;
+    document.addEventListener('deviceready', () => {
         if (typeof admob === 'undefined') return;
 
-        admob.banner.config({
-            id: 'ca-app-pub-5008597546147207/5685331978', 
-            autoShow: true
-        });
+        // Banner
+        admob.banner.config({ id: 'ca-app-pub-5008597546147207/5685331978', autoShow: true });
         admob.banner.prepare();
 
-        admob.rewardvideo.config({
-            id: 'ca-app-pub-5008597546147207/6828992875'
-        });
+        // Ödüllü Reklam Yapılandırması
+        admob.rewardvideo.config({ id: 'ca-app-pub-5008597546147207/6828992875' });
         
-        // Reklam yüklendiğinde durumu güncelle
-        document.addEventListener('admob.rewardvideo.events.LOAD', () => { adReady = true; });
-        document.addEventListener('admob.rewardvideo.events.CLOSE', () => { 
-            adReady = false; 
-            admob.rewardvideo.prepare(); // Bir sonraki için hazırla
-        });
-        
-        admob.rewardvideo.prepare();
+        // Önemli: Reklamın yüklendiğini takip et
+        document.addEventListener('admob.rewardvideo.events.LOAD', () => { isAdLoaded = true; });
+        document.addEventListener('admob.rewardvideo.events.LOAD_FAIL', () => { isAdLoaded = false; });
+        document.addEventListener('admob.rewardvideo.events.CLOSE', () => { isAdLoaded = false; admob.rewardvideo.prepare(); });
+
+        admob.rewardvideo.prepare(); // İlk yüklemeyi başlat
+    }, false);
+
+    // --- REKLAM GÖSTERME FONKSİYONU ---
+    async function showAdAndCreateRoom() {
+        const inputName = document.getElementById('p-name').value.trim();
+        if(!inputName) return alert(curLang === 'tr' ? "İsim gir!" : "Enter name!");
+
+        if (typeof admob === 'undefined') { initRoom(true); return; }
+
+        const overlay = document.getElementById('ad-loading-overlay');
+        overlay.classList.remove('hidden');
+
+        // Reklam yüklü değilse 3 saniye kadar yüklenmesini bekle
+        let attempts = 0;
+        while (!isAdLoaded && attempts < 30) { 
+            await new Promise(r => setTimeout(r, 100)); 
+            attempts++; 
+        }
+
+        try {
+            if (isAdLoaded) {
+                await admob.rewardvideo.show();
+                initRoom(true);
+            } else {
+                // Reklam yüklenemezse bile kullanıcıyı bekletme, odayı kur
+                initRoom(true);
+            }
+        } catch (e) {
+            initRoom(true);
+        } finally {
+            overlay.classList.add('hidden');
+        }
     }
 
-    // --- FIREBASE AYARLARI ---
+    document.getElementById('create-room-trigger').onclick = showAdAndCreateRoom;
+
+    // --- FIREBASE & OYUN MANTĞI (DOKUNULMADI) ---
     const firebaseConfig = {
         apiKey: "AIzaSyBXIpV169nwxWT8fOYaA7NK5jcqmlw64Yg",
         authDomain: "isimsehironline-af2bd.firebaseapp.com",
@@ -206,40 +233,6 @@
         return catMapENtoTR[c] || c;
     }
 
-    // --- REKLAMLI ODA KURMA (FIXED) ---
-    document.getElementById('create-room-trigger').addEventListener('click', async () => {
-        const inputName = document.getElementById('p-name').value.trim();
-        if(!inputName) return alert(curLang === 'tr' ? "İsim giriniz!" : "Enter name!");
-
-        const loadingOv = document.getElementById('ad-loading-overlay');
-        const statusMsg = document.getElementById('ad-status-msg');
-
-        if (typeof admob !== 'undefined') {
-            loadingOv.classList.remove('hidden');
-            
-            // Eğer reklam henüz hazır değilse 2 saniye bekle
-            if (!adReady) {
-                admob.rewardvideo.prepare();
-                await new Promise(r => setTimeout(r, 2000));
-            }
-
-            try {
-                await admob.rewardvideo.show();
-                // Reklam kapandıktan sonra devam etmesi için event beklemek yerine 
-                // doğrudan fonksiyonu çağırıyoruz (Plugin genelde senkron show yapar)
-                initRoom(true);
-            } catch (e) {
-                console.log("Reklam hatası:", e);
-                initRoom(true); // Hata olsa da oyun başlasın
-            } finally {
-                loadingOv.classList.add('hidden');
-            }
-        } else {
-            initRoom(true); // Tarayıcıda doğrudan geç
-        }
-    });
-
-    // --- DİĞER EVENTLER VE FONKSİYONLAR (DEĞİŞMEDİ) ---
     document.getElementById('join-nav-btn').addEventListener('click', () => nav('sc-join'));
     document.getElementById('settings-nav-btn').addEventListener('click', () => nav('sc-settings'));
     document.getElementById('join-back-btn').addEventListener('click', () => nav('sc-main'));
