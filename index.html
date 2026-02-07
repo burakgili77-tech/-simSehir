@@ -15,10 +15,9 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; outline: none; touch-action: manipulation; }
         body, html { height: 100%; width: 100%; background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; overflow: hidden; position: fixed; }
         
-        /* Banner için alttan boşluk bıraktık */
         #app { 
             width: 96%; max-width: 420px; 
-            height: calc(100vh - 80px); /* Banner payı */
+            height: calc(100vh - 80px); 
             margin-top: 20px; 
             background: var(--glass); backdrop-filter: blur(25px); 
             border: 2px solid var(--border); border-radius: 25px; padding: 20px; 
@@ -150,7 +149,6 @@
 
 <script>
     // --- ADMOB AYARLARI ---
-    // Cordova/Capacitor cihaz hazır olduğunda çalışır
     document.addEventListener('deviceready', initAdMob, false);
 
     function initAdMob() {
@@ -159,21 +157,19 @@
             return;
         }
 
-        // 1. BANNER REKLAM (Alt kısım)
-        // Test ID: ca-app-pub-3940256099942544/6300978111
+        // 1. BANNER REKLAM (Alt kısım) - Google Test ID (Android)
         admob.banner.config({
             id: 'ca-app-pub-3940256099942544/6300978111', 
             autoShow: true,
-            overlap: false // Uygulama ekranını yukarı iter, üstüne binmez
+            overlap: false 
         });
         admob.banner.prepare();
 
-        // 2. ÖDÜLLÜ REKLAM HAZIRLIĞI
-        // Test ID: ca-app-pub-3940256099942544/5224354917
+        // 2. ÖDÜLLÜ REKLAM (Video) - Google Test ID (Android)
         admob.rewardvideo.config({
             id: 'ca-app-pub-3940256099942544/5224354917'
         });
-        admob.rewardvideo.prepare(); // İlk reklamı hafızaya al
+        admob.rewardvideo.prepare(); 
     }
 
     // --- FIREBASE AYARLARI ---
@@ -211,33 +207,25 @@
         return catMapENtoTR[c] || c;
     }
 
-    // --- REKLAMLI ODA KURMA TETİKLEYİCİSİ ---
     document.getElementById('create-room-trigger').addEventListener('click', () => {
         const inputName = document.getElementById('p-name').value.trim();
         if(!inputName) return alert(curLang === 'tr' ? "İsim giriniz!" : "Enter name!");
 
-        // AdMob eklentisi var mı kontrol et
         if (typeof admob !== 'undefined') {
             const loadingOv = document.getElementById('ad-loading-overlay');
             loadingOv.classList.remove('hidden');
 
-            // Reklamı göster
             admob.rewardvideo.show().then(() => {
                 loadingOv.classList.add('hidden');
-                // Bir sonraki reklamı şimdiden hazırla
                 admob.rewardvideo.prepare();
-                // Odayı kur
                 initRoom(true);
             }).catch(e => {
-                // Reklam gösterilemediyse (hata veya yüklenmediyse) direkt aç
                 loadingOv.classList.add('hidden');
                 console.log("Reklam hatası:", e);
-                initRoom(true); // Kullanıcıyı mağdur etme, odayı aç
-                admob.rewardvideo.prepare(); // Tekrar yüklemeyi dene
+                initRoom(true); 
+                admob.rewardvideo.prepare();
             });
         } else {
-            // Eklenti yoksa (Tarayıcıdaysa) direkt aç
-            console.log("AdMob yok, direkt açılıyor.");
             initRoom(true);
         }
     });
@@ -448,7 +436,7 @@
                 const card = document.getElementById(`card-${sid}`);
                 if(card) {
                     const bno = card.querySelector('button[data-type="no"]'), bok = card.querySelector('button[data-type="ok"]');
-                    if(bno) bno.classList.remove('active-no'); if(bok) bok.classList.remove('active-ok');
+                    if(bno) bno.classList.remove('active-no'); if(bok) bok.classList.add('active-ok');
                     if(type === 'ok' && bok) bok.classList.add('active-ok'); if(type === 'no' && bno) bno.classList.add('active-no');
                 }
                 localVotes[sid] = type;
