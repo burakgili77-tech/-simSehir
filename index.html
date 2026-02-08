@@ -10,20 +10,52 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     
+    <!-- Google AdSense Script - GERÇEK TEST REKLAMLARI -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3940256099942544"
+     crossorigin="anonymous"></script>
+    
     <style>
         :root { --neon: #00f2ff; --glass: rgba(12, 28, 48, 0.98); --border: rgba(0, 242, 255, 0.3); --bg: #010816; --win: #00ff88; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; outline: none; touch-action: manipulation; }
         body, html { height: 100%; width: 100%; background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; overflow: hidden; position: fixed; }
         
+        /* Banner Reklam Alanları */
+        #banner-ad-top {
+            width: 100%;
+            background: rgba(0,0,0,0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 5px 0;
+            min-height: 60px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        #banner-ad-bottom {
+            width: 100%;
+            background: rgba(0,0,0,0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 5px 0;
+            min-height: 60px;
+            border-top: 1px solid var(--border);
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+        }
+        
         #app { 
             width: 96%; max-width: 420px; 
-            height: calc(100vh - 140px); /* Banner payı bırakıldı */
-            margin-top: 20px; 
+            height: calc(100vh - 130px);
+            margin-top: 10px; 
             background: var(--glass); backdrop-filter: blur(25px); 
             border: 2px solid var(--border); border-radius: 25px; padding: 20px; 
             display: flex; flex-direction: column; position: relative; 
             margin-left: auto; margin-right: auto; z-index: 10; 
             box-shadow: 0 0 40px rgba(0,0,0,0.8); 
+            margin-bottom: 70px;
         }
 
         .menu-btn { background: rgba(255, 255, 255, 0.08); border: 1px solid var(--border); color: #fff; padding: 14px; border-radius: 18px; font-size: 14px; font-weight: 800; cursor: pointer; margin-bottom: 10px; width: 100%; display: block; text-transform: uppercase; transition: 0.2s; text-align: center; flex-shrink: 0; }
@@ -51,10 +83,72 @@
         .confirm-row { display:flex; gap:8px; justify-content:space-between; }
         .confirm-row .menu-btn { flex:1; margin:0; }
 
-        #ad-loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #ad-loading-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.95); z-index: 10000; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            color: #fff; 
+        }
+        
+        #ad-content {
+            background: white;
+            width: 90%;
+            max-width: 400px;
+            height: 300px;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            padding: 20px;
+            box-shadow: 0 0 30px rgba(0,242,255,0.3);
+        }
+        
+        #ad-content img {
+            max-width: 80%;
+            max-height: 200px;
+            margin-bottom: 20px;
+        }
+        
+        #ad-skip-info {
+            color: rgba(255,255,255,0.7);
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        
+        #ad-skip-btn {
+            background: var(--neon);
+            color: #000;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+        
+        #ad-skip-btn:disabled {
+            background: rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.5);
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
+
+<!-- Banner Reklam ÜST -->
+<div id="banner-ad-top">
+    <ins class="adsbygoogle"
+         style="display:inline-block;width:320px;height:50px"
+         data-ad-client="ca-pub-3940256099942544"
+         data-ad-slot="6300978111"></ins>
+</div>
 
 <div id="app">
     <div id="sc-main" class="screen">
@@ -62,7 +156,7 @@
         <div class="logo" data-lang="title">İSİM ŞEHİR</div>
         <div class="scroll-v">
             <input type="text" id="p-name" class="input-box" data-lang-placeholder="placeholder" placeholder="İSİM GİR">
-            <button id="create-room-trigger" class="menu-btn btn-main" data-lang="create">📺 ODA KUR (REKLAM İZLE)</button>
+            <button id="create-room-trigger" class="menu-btn btn-main" data-lang="create">📺 ODA KUR</button>
             <button class="menu-btn" id="join-nav-btn" data-lang="join">KATIL</button>
             <button class="menu-btn" id="settings-nav-btn" data-lang="settings">⚙️ AYARLAR</button>
         </div>
@@ -119,6 +213,7 @@
         <h3 style="text-align:center; color:var(--neon); margin-bottom:10px; flex-shrink:0;" data-lang="review_title">OYLAMA</h3>
         <div class="scroll-v" id="all-reviews-list"></div>
         <button id="admin-results-btn" class="menu-btn btn-main hidden" data-lang="see_results">SONUÇLAR</button>
+        <button id="review-back-btn" class="menu-btn btn-back" data-lang="back">LOBİ</button>
     </div>
 
     <div id="sc-results" class="screen hidden">
@@ -126,6 +221,14 @@
         <div class="scroll-v" id="final-ranks"></div>
         <button class="menu-btn btn-main" id="results-back-btn" data-lang="back">LOBİYE DÖN</button>
     </div>
+</div>
+
+<!-- Banner Reklam ALT -->
+<div id="banner-ad-bottom">
+    <ins class="adsbygoogle"
+         style="display:inline-block;width:320px;height:50px"
+         data-ad-client="ca-pub-3940256099942544"
+         data-ad-slot="6300978111"></ins>
 </div>
 
 <div id="confirm-modal" class="hidden">
@@ -140,71 +243,65 @@
 </div>
 
 <div id="ad-loading-overlay" class="hidden">
-    <div id="ad-status-text" style="color:var(--neon); font-size:18px; text-align:center; font-weight:bold;">REKLAM YÜKLENİYOR...<br><span style="font-size:12px; font-weight:normal;">Lütfen bekleyin</span></div>
+    <div id="ad-content">
+        <img src="https://via.placeholder.com/300x200/00f2ff/000000?text=TEST+REKLAM" alt="Ad">
+        <div>Bu bir test reklamıdır</div>
+        <div style="font-size:14px; color:#666; margin-top:10px;">Gerçek uygulamada burada reklam görünecek</div>
+    </div>
+    <div id="ad-skip-info">Reklamı geçebilmek için bekleyin...</div>
+    <button id="ad-skip-btn" disabled>Reklamı Geç (5)</button>
 </div>
 
 <script>
-    // --- ADMOB MOTORU (KESİN ÇALIŞAN AYARLAR) ---
-    let isAdReady = false;
-
-    document.addEventListener('deviceready', function() {
-        if (typeof admob === 'undefined') {
-            console.log("AdMob eklentisi bulunamadı.");
-            return;
-        }
-
-        // Banner: Uygulama açılır açılmaz yüklensin ve gösterilsin (Para kazanmaya başla)
-        admob.banner.config({
-            id: 'ca-app-pub-5008597546147207/5685331978',
-            autoShow: true
-        });
-        admob.banner.prepare();
-
-        // Ödüllü Reklam (Oda kurmak için)
-        admob.rewardvideo.config({
-            id: 'ca-app-pub-5008597546147207/6828992875'
-        });
-
-        // Reklam olaylarını dinle
-        document.addEventListener('admob.rewardvideo.events.LOAD', function() { isAdReady = true; });
-        document.addEventListener('admob.rewardvideo.events.LOAD_FAIL', function() { isAdReady = false; admob.rewardvideo.prepare(); });
-        document.addEventListener('admob.rewardvideo.events.CLOSE', function() { isAdReady = false; admob.rewardvideo.prepare(); });
-
-        admob.rewardvideo.prepare(); // İlk yüklemeyi yap
-    }, false);
-
-    async function showAdAndCreateRoom() {
-        const inputName = document.getElementById('p-name').value.trim();
-        if(!inputName) return alert(curLang === 'tr' ? "İsim gir!" : "Enter name!");
-
-        if (typeof admob === 'undefined') {
-            initRoom(true);
-            return;
-        }
-
-        const overlay = document.getElementById('ad-loading-overlay');
-        overlay.classList.remove('hidden');
-
-        // Reklam hazır değilse 4 saniye bekle
-        let waitCounter = 0;
-        while (!isAdReady && waitCounter < 40) {
-            await new Promise(r => setTimeout(r, 100));
-            waitCounter++;
-        }
-
-        if (isAdReady) {
-            admob.rewardvideo.show();
-            initRoom(true); // Reklam gösterilirken arka planda odayı kur
-        } else {
-            // Reklam yine de yüklenmezse kullanıcıyı kaybetmemek için oyunu başlat
-            initRoom(true);
-        }
-        overlay.classList.add('hidden');
+    // Banner Reklamları Yükle
+    try {
+        (adsbygoogle = window.adsbygoogle || []).push({});
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (e) {
+        console.log('Banner ads loading:', e);
     }
 
-    document.getElementById('create-room-trigger').addEventListener('click', showAdAndCreateRoom);
+    // Interstitial Reklam Fonksiyonu
+    let adSkipTimer = null;
+    let adSkipCountdown = 5;
 
-    // --- FIREBASE & OYUN MANTĞI (DEĞİŞMEDİ) ---
+    function showInterstitialAd() {
+        return new Promise((resolve) => {
+            const overlay = document.getElementById('ad-loading-overlay');
+            const skipBtn = document.getElementById('ad-skip-btn');
+            const skipInfo = document.getElementById('ad-skip-info');
+            
+            overlay.classList.remove('hidden');
+            skipBtn.disabled = true;
+            adSkipCountdown = 5;
+            skipBtn.innerText = `Reklamı Geç (${adSkipCountdown})`;
+            
+            // 5 saniye geri sayım
+            adSkipTimer = setInterval(() => {
+                adSkipCountdown--;
+                if (adSkipCountdown > 0) {
+                    skipBtn.innerText = `Reklamı Geç (${adSkipCountdown})`;
+                    skipInfo.innerText = `Reklamı ${adSkipCountdown} saniye sonra geçebilirsiniz...`;
+                } else {
+                    clearInterval(adSkipTimer);
+                    skipBtn.disabled = false;
+                    skipBtn.innerText = 'Reklamı Geç';
+                    skipInfo.innerText = 'Artık reklamı geçebilirsiniz!';
+                }
+            }, 1000);
+            
+            // Skip butonuna tıklama
+            skipBtn.onclick = () => {
+                if (!skipBtn.disabled) {
+                    clearInterval(adSkipTimer);
+                    overlay.classList.add('hidden');
+                    resolve(true);
+                }
+            };
+        });
+    }
+
+    // --- FIREBASE & OYUN MANTĞI ---
     const firebaseConfig = {
         apiKey: "AIzaSyBXIpV169nwxWT8fOYaA7NK5jcqmlw64Yg",
         authDomain: "isimsehironline-af2bd.firebaseapp.com",
@@ -226,8 +323,8 @@
     let confirmOpen = false;
 
     const langDict = {
-        tr: { title:"İSİM ŞEHİR", create:"ODA KUR (REKLAM)", join:"KATIL", settings:"AYARLAR", start:"BAŞLAT", placeholder:"İSİM GİR", join_title:"ODAYA KATIL", code_placeholder:"ODA KODU", back:"GERİ / LOBİ", room_code:"KOD:", finish:"BİTTİ!", results:"🏆 SKORLAR", menu:"ANA MENÜ", time_label:"SÜRE", cat_placeholder:"KATEGORİ", review_title:"OYLAMA", see_results:"SONUÇLAR", waiting:"BEKLENİYOR...", red:"RED", ok:"TAMAM", confirm_title:"EMİN MİSİN?", confirm_yes:"EVET", confirm_no:"HAYIR" },
-        en: { title:"NAME CITY", create:"OPEN ROOM (AD)", join:"JOIN", settings:"SETTINGS", start:"START", placeholder:"ENTER NAME", join_title:"JOIN ROOM", code_placeholder:"ROOM CODE", back:"BACK / LOBBY", room_code:"CODE:", finish:"FINISH!", results:"🏆 SCORES", menu:"MAIN MENU", time_label:"TIME", cat_placeholder:"CATEGORY", review_title:"VOTING", see_results:"RESULTS", waiting:"WAITING FOR ADMIN...", red:"NO", ok:"OK", confirm_title:"ARE YOU SURE?", confirm_yes:"YES", confirm_no:"NO" }
+        tr: { title:"İSİM ŞEHİR", create:"📺 ODA KUR", join:"KATIL", settings:"AYARLAR", start:"BAŞLAT", placeholder:"İSİM GİR", join_title:"ODAYA KATIL", code_placeholder:"ODA KODU", back:"GERİ / LOBİ", room_code:"KOD:", finish:"BİTTİ!", results:"🏆 SKORLAR", menu:"ANA MENÜ", time_label:"SÜRE", cat_placeholder:"KATEGORİ", review_title:"OYLAMA", see_results:"SONUÇLAR", waiting:"BEKLENİYOR...", red:"RED", ok:"TAMAM", confirm_title:"EMİN MİSİN?", confirm_yes:"EVET", confirm_no:"HAYIR" },
+        en: { title:"NAME CITY", create:"📺 OPEN ROOM", join:"JOIN", settings:"SETTINGS", start:"START", placeholder:"ENTER NAME", join_title:"JOIN ROOM", code_placeholder:"ROOM CODE", back:"BACK / LOBBY", room_code:"CODE:", finish:"FINISH!", results:"🏆 SCORES", menu:"MAIN MENU", time_label:"TIME", cat_placeholder:"CATEGORY", review_title:"VOTING", see_results:"RESULTS", waiting:"WAITING FOR ADMIN...", red:"NO", ok:"OK", confirm_title:"ARE YOU SURE?", confirm_yes:"YES", confirm_no:"NO" }
     };
 
     const catMapTRtoEN = { "İSİM":"NAME", "ŞEHİR":"CITY", "HAYVAN":"ANIMAL", "BİTKİ":"PLANT", "EŞYA":"OBJECT" };
@@ -238,6 +335,18 @@
         if(curLang === 'en') return catMapTRtoEN[c] || c;
         return catMapENtoTR[c] || c;
     }
+
+    // Event Listeners
+    document.getElementById('create-room-trigger').addEventListener('click', async () => {
+        const inputName = document.getElementById('p-name').value.trim();
+        if(!inputName) return alert(curLang === 'tr' ? "İsim gir!" : "Enter name!");
+        
+        // Reklamı göster
+        await showInterstitialAd();
+        
+        // Oda kur
+        initRoom(true);
+    });
 
     document.getElementById('join-nav-btn').addEventListener('click', () => nav('sc-join'));
     document.getElementById('settings-nav-btn').addEventListener('click', () => nav('sc-settings'));
