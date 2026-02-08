@@ -18,11 +18,11 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; outline: none; touch-action: manipulation; }
         body, html { height: 100%; width: 100%; background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; overflow: hidden; position: fixed; }
         
-        /* --- BANNER REKLAM (ÜST - GERÇEK) --- */
+        /* --- ÜST BANNER REKLAM (Sabit) --- */
         #banner-ad-top {
             width: 100%;
-            height: 60px; /* Standart Banner Yüksekliği */
-            background: #f0f0f0; /* Reklam gelmezse belli olsun diye gri fon */
+            height: 60px; /* AdSense standart yükseklik */
+            background: #ffffff; /* Reklam alanı beyaz kalsın ki yüklendiği belli olsun */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -34,14 +34,13 @@
         /* --- OYUN ALANI --- */
         #app { 
             width: 96%; max-width: 420px; 
-            height: calc(100vh - 80px); /* Alt reklam kalktığı için alan büyüdü */
+            height: calc(100vh - 70px); /* Sadece üst reklam payı */
             margin-top: 10px; 
             background: var(--glass); backdrop-filter: blur(25px); 
             border: 2px solid var(--border); border-radius: 25px; padding: 20px; 
             display: flex; flex-direction: column; position: relative; 
             margin-left: auto; margin-right: auto; z-index: 10; 
             box-shadow: 0 0 40px rgba(0,0,0,0.8); 
-            /* Alt boşluk kaldırıldı */
         }
 
         .menu-btn { background: rgba(255, 255, 255, 0.08); border: 1px solid var(--border); color: #fff; padding: 14px; border-radius: 18px; font-size: 14px; font-weight: 800; cursor: pointer; margin-bottom: 10px; width: 100%; display: block; text-transform: uppercase; transition: 0.2s; text-align: center; flex-shrink: 0; }
@@ -69,25 +68,25 @@
         .confirm-row { display:flex; gap:8px; justify-content:space-between; }
         .confirm-row .menu-btn { flex:1; margin:0; }
 
-        /* --- INTERSTITIAL REKLAM ALANI (GERÇEK) --- */
+        /* --- TAM EKRAN REKLAM SİMÜLASYONU (Web Tabanlı) --- */
         #interstitial-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #FFFFFF; /* AdMob genelde beyaz zemin kullanır */
+            background: #000000;
             z-index: 10000;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
 
         #loading-view {
-            color: #000; font-family: sans-serif; text-align: center;
+            color: #fff; font-family: sans-serif; text-align: center;
         }
         .spinner {
-            border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px auto;
+            border: 4px solid #333; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px auto;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         #ad-toast {
             position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%);
-            background: rgba(0,0,0,0.8); color: white;
+            background: #333; color: white;
             padding: 12px 24px; border-radius: 25px;
             font-family: sans-serif; font-size: 14px;
             animation: slideUp 0.3s ease-out;
@@ -96,18 +95,17 @@
         @keyframes slideUp { from { transform: translate(-50%, 20px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
 
         #ad-real-container {
-            display: none; /* JS ile açılacak */
+            display: none;
             width: 100%; height: 100%;
-            background: #fff;
+            background: #fff; /* Reklam zemini beyaz */
             align-items: center; justify-content: center;
             position: relative;
         }
 
-        /* Reklamı Kapat Butonu */
         #ad-close-btn {
             position: absolute; top: 0; left: 0;
-            background: rgba(0,0,0,0.1); border: none; font-size: 30px; color: #333;
-            width: 50px; height: 50px;
+            background: white; border: none; font-size: 24px; color: #000;
+            width: 40px; height: 40px; font-weight:bold;
             cursor: pointer; z-index: 10002;
             display: flex; align-items: center; justify-content: center;
         }
@@ -119,7 +117,8 @@
     <ins class="adsbygoogle"
          style="display:inline-block;width:320px;height:50px"
          data-ad-client="ca-pub-3940256099942544"
-         data-ad-slot="6300978111"></ins>
+         data-ad-slot="6300978111"
+         data-adtest="on"></ins>
 </div>
 
 <div id="app">
@@ -219,21 +218,21 @@
         <button id="ad-close-btn">✕</button>
         
         <ins class="adsbygoogle"
-             style="display:block; width:300px; height:250px"
+             style="display:inline-block;width:300px;height:250px"
              data-ad-client="ca-pub-3940256099942544"
              data-ad-slot="6300978111"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
+             data-adtest="on"></ins>
     </div>
 </div>
 
 <script>
-    // Banner Reklamı Başlat
+    // --- REKLAM YÖNETİMİ ---
+    
+    // Banner'ı başlat
     try {
         (adsbygoogle = window.adsbygoogle || []).push({});
-    } catch (e) { console.log(e); }
+    } catch (e) { console.log("Banner error:", e); }
 
-    // Interstitial Reklam Fonksiyonu (GERÇEK REKLAM ÇAĞIRIR)
     function showInterstitialAd() {
         return new Promise((resolve) => {
             const overlay = document.getElementById('interstitial-overlay');
@@ -242,36 +241,38 @@
             const adContainer = document.getElementById('ad-real-container');
             const closeBtn = document.getElementById('ad-close-btn');
 
-            // Reset States
+            // Reset
             overlay.classList.remove('hidden');
             loadingView.style.display = 'block';
             adContainer.style.display = 'none';
             toast.classList.add('hidden');
 
-            // 1. Yükleme Simülasyonu (Ağ gecikmesi gibi)
-            setTimeout(() => {
+            // Reklam Tetikleme Fonksiyonu
+            const triggerAd = () => {
                 loadingView.style.display = 'none';
-                
-                // 2. Toast Mesajı
                 toast.classList.remove('hidden');
                 
-                // 3. Reklamı Göster ve Google'a İstek At
                 setTimeout(() => {
                     toast.classList.add('hidden');
-                    adContainer.style.display = 'flex'; // Reklam kutusunu aç
+                    adContainer.style.display = 'flex'; // Reklam alanını aç
                     
-                    // BURADA GERÇEK REKLAM İSTEĞİ TETİKLENİR
+                    // Reklamı yükle
                     try {
+                        // Eğer zaten yüklendiyse tekrar push gerekmez ama tazelemek için:
+                        const ins = adContainer.querySelector('ins');
+                        ins.innerHTML = ""; // Temizle
+                        ins.removeAttribute('data-adsbygoogle-status');
                         (adsbygoogle = window.adsbygoogle || []).push({});
-                    } catch (e) {
-                        console.log("AdSense push error:", e);
-                    }
+                    } catch (e) { console.log("Interstitial push error:", e); }
+                    
+                }, 800); // "Ad Ready" göründükten kısa süre sonra
+            };
 
-                }, 1000); 
+            // Loading'de takılmayı önlemek için zamanlayıcı (ÖNEMLİ: 2 saniye sonra reklamı zorla göster)
+            // APK içinde internet yavaşsa veya file:// sorunu varsa en azından boş kutu açılsın, spinner dönmesin.
+            setTimeout(triggerAd, 2000);
 
-            }, 1500); 
-
-            // X Butonuna Tıklama (Reklamı Kapat)
+            // Kapatma
             closeBtn.onclick = () => {
                 overlay.classList.add('hidden');
                 resolve(true);
@@ -279,7 +280,7 @@
         });
     }
 
-    // --- FIREBASE & OYUN MANTĞI ---
+    // --- FIREBASE & OYUN MANTIĞI ---
     const firebaseConfig = {
         apiKey: "AIzaSyBXIpV169nwxWT8fOYaA7NK5jcqmlw64Yg",
         authDomain: "isimsehironline-af2bd.firebaseapp.com",
@@ -314,15 +315,15 @@
         return catMapENtoTR[c] || c;
     }
 
-    // Event Listeners
+    // ODA KUR Butonu: Reklamı Göster -> Sonra Odayı Kur
     document.getElementById('create-room-trigger').addEventListener('click', async () => {
         const inputName = document.getElementById('p-name').value.trim();
         if(!inputName) return alert(curLang === 'tr' ? "İsim gir!" : "Enter name!");
         
-        // Reklamı göster (GERÇEK REKLAM AKIŞI)
+        // Önce Reklam (Loading -> Ad Ready -> Real Ad)
         await showInterstitialAd();
         
-        // Oda kur
+        // Sonra İşlem
         initRoom(true);
     });
 
