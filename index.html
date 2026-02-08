@@ -10,7 +10,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     
-    <!-- Google AdSense Script - GERÇEK TEST REKLAMLARI -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3940256099942544"
      crossorigin="anonymous"></script>
     
@@ -19,52 +18,68 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; outline: none; touch-action: manipulation; }
         body, html { height: 100%; width: 100%; background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; overflow: hidden; position: fixed; }
         
-        /* Banner Reklam Alanları */
-        #banner-ad-top {
+        /* --- BANNER REKLAM STİLLERİ (AdMob Test Görünümü) --- */
+        .test-banner {
             width: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 60px;
+            background: #f1f1f1;
             display: flex;
-            justify-content: center;
             align-items: center;
-            padding: 5px 0;
-            min-height: 60px;
-            border-bottom: 1px solid var(--border);
+            justify-content: center;
+            border: 1px solid #ccc;
             position: relative;
+            overflow: hidden;
+        }
+        
+        .test-banner-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        #banner-ad-top::before {
-            content: '🎯 TEST BANNER REKLAM - ÜST (320x50) - ID: ca-pub-3940256099942544';
-            position: absolute;
-            font-size: 10px;
-            color: rgba(255,255,255,0.8);
+        .test-icon {
+            width: 40px; height: 40px;
+            background: #db4437; /* Google Red */
+            border-radius: 50%;
+            position: relative;
+        }
+        /* Basit Canavar İkonu (Banner için) */
+        .test-icon::after {
+            content: '👁️'; font-size: 20px; position: absolute; left: 8px; top: 5px;
+        }
+        
+        .test-text {
+            color: #555;
+            font-family: Arial, sans-serif;
             font-weight: bold;
-            text-align: center;
+            font-size: 14px;
+        }
+        
+        .test-badge {
+            background: #0f9d58; /* Google Green */
+            color: white;
+            padding: 2px 6px;
+            font-size: 10px;
+            border-radius: 4px;
+            position: absolute;
+            top: 2px;
+            right: 2px;
+        }
+
+        #banner-ad-top {
+            border-bottom: 1px solid var(--border);
+            z-index: 50;
         }
 
         #banner-ad-bottom {
-            width: 100%;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 5px 0;
-            min-height: 60px;
-            border-top: 1px solid var(--border);
             position: fixed;
             bottom: 0;
             left: 0;
+            border-top: 1px solid var(--border);
             z-index: 100;
         }
-
-        #banner-ad-bottom::before {
-            content: '🎯 TEST BANNER REKLAM - ALT (320x50) - ID: ca-pub-3940256099942544';
-            position: absolute;
-            font-size: 10px;
-            color: rgba(255,255,255,0.9);
-            font-weight: bold;
-            text-align: center;
-        }
         
+        /* --- OYUN ALANI --- */
         #app { 
             width: 96%; max-width: 420px; 
             height: calc(100vh - 130px);
@@ -102,76 +117,91 @@
         .confirm-row { display:flex; gap:8px; justify-content:space-between; }
         .confirm-row .menu-btn { flex:1; margin:0; }
 
-        #ad-loading-overlay { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.95); z-index: 10000; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            color: #fff; 
+        /* --- INTERSTITIAL REKLAM (ÖZEL AKIŞ) --- */
+        #interstitial-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #FFFFFF; /* BEYAZ ARKA PLAN */
+            z-index: 10000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+
+        #loading-view {
+            color: #000; font-family: sans-serif; text-align: center;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px auto;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* AD READY TOAST */
+        #ad-toast {
+            position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.8); color: white;
+            padding: 12px 24px; border-radius: 25px;
+            font-family: sans-serif; font-size: 14px;
+            animation: slideUp 0.3s ease-out;
+            z-index: 10001;
+        }
+        @keyframes slideUp { from { transform: translate(-50%, 20px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+
+        /* FULL SCREEN AD VISUALS */
+        #ad-visuals {
+            display: none; /* JS ile açılacak */
+            flex-direction: column; align-items: center; justify-content: center;
+            width: 100%; height: 100%; position: relative;
+        }
+
+        /* Close Button (Top Left) */
+        #ad-close-btn {
+            position: absolute; top: 10px; left: 10px;
+            background: none; border: none; font-size: 30px; color: #555;
+            cursor: pointer; z-index: 10002; padding: 10px;
+        }
+
+        /* Red Monster Simulation (CSS Art) */
+        .monster-body {
+            width: 120px; height: 120px; background: #DB4437; border-radius: 50%;
+            position: relative; margin-bottom: 20px;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 10px 25px rgba(219,68,55,0.3);
+        }
+        .monster-eye {
+            width: 40px; height: 40px; background: #fff; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            position: relative; top: -10px;
+        }
+        .monster-pupil { width: 15px; height: 15px; background: #000; border-radius: 50%; }
+        .monster-wheel {
+            width: 20px; height: 40px; background: #333; position: absolute; bottom: -30px;
+            border-radius: 4px;
+        }
+        .monster-wheel-circle {
+            width: 40px; height: 40px; border: 5px solid #333; border-radius: 50%;
+            position: absolute; bottom: -60px;
         }
         
-        #ad-content {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            width: 90%;
-            max-width: 400px;
-            height: 300px;
-            border-radius: 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 18px;
-            font-weight: bold;
-            text-align: center;
-            padding: 20px;
-            box-shadow: 0 0 30px rgba(0,242,255,0.3);
+        .nice-job-badge {
+            margin-top: 60px; /* Wheel space */
+            color: #0F9D58; font-family: 'Arial Black', sans-serif; font-size: 32px;
+            text-transform: uppercase; letter-spacing: 1px;
+            display: flex; align-items: center; gap: 10px;
         }
-        
-        #ad-content .ad-title {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-        
-        #ad-content .ad-id {
-            font-size: 12px;
-            opacity: 0.8;
-            margin-top: 10px;
-        }
-        
-        #ad-skip-info {
-            color: rgba(255,255,255,0.7);
-            margin-top: 20px;
-            font-size: 14px;
-        }
-        
-        #ad-skip-btn {
-            background: var(--neon);
-            color: #000;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 15px;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: 0.3s;
-        }
-        
-        #ad-skip-btn:disabled {
-            background: rgba(255,255,255,0.2);
-            color: rgba(255,255,255,0.5);
-            cursor: not-allowed;
-        }
+        .nice-job-badge span { color: #F4B400; font-size: 40px; } /* Star */
+
+        .ad-desc { color: #888; margin-top: 10px; font-family: sans-serif; font-size: 14px; }
     </style>
 </head>
 <body>
 
-<!-- Banner Reklam ÜST -->
-<div id="banner-ad-top">
-    <ins class="adsbygoogle"
-         style="display:inline-block;width:320px;height:50px"
-         data-ad-client="ca-pub-3940256099942544"
-         data-ad-slot="6300978111"></ins>
+<div id="banner-ad-top" class="test-banner">
+    <div class="test-banner-content">
+        <div class="test-icon"></div>
+        <div class="test-text">
+            <div>Nice job!</div>
+            <div style="font-size:10px; font-weight:normal; color:#888;">Test Ad: 320x50</div>
+        </div>
+    </div>
+    <div class="test-badge">Ad</div>
 </div>
 
 <div id="app">
@@ -247,12 +277,15 @@
     </div>
 </div>
 
-<!-- Banner Reklam ALT -->
-<div id="banner-ad-bottom">
-    <ins class="adsbygoogle"
-         style="display:inline-block;width:320px;height:50px"
-         data-ad-client="ca-pub-3940256099942544"
-         data-ad-slot="6300978111"></ins>
+<div id="banner-ad-bottom" class="test-banner">
+    <div class="test-banner-content">
+        <div class="test-icon"></div>
+        <div class="test-text">
+            <div>Nice job!</div>
+            <div style="font-size:10px; font-weight:normal; color:#888;">Test Ad: 320x50</div>
+        </div>
+    </div>
+    <div class="test-badge">Ad</div>
 </div>
 
 <div id="confirm-modal" class="hidden">
@@ -266,64 +299,65 @@
     </div>
 </div>
 
-<div id="ad-loading-overlay" class="hidden">
-    <div id="ad-content">
-        <div class="ad-title">🎯 TEST INTERSTITIAL REKLAM</div>
-        <div style="font-size:16px; margin:20px 0;">
-            Bu bir tam ekran test reklamıdır
-        </div>
-        <div>📱 320x480</div>
-        <div class="ad-id">Test ID: ca-app-pub-3940256099942544/1033173712</div>
+<div id="interstitial-overlay" class="hidden">
+    <button id="ad-close-btn" style="display:none;">✕</button>
+    
+    <div id="loading-view">
+        <div class="spinner"></div>
+        <div>Loading...</div>
     </div>
-    <div id="ad-skip-info">Reklamı geçebilmek için bekleyin...</div>
-    <button id="ad-skip-btn" disabled>Reklamı Geç (5)</button>
+
+    <div id="ad-toast" class="hidden">Ad Ready</div>
+
+    <div id="ad-visuals">
+        <div class="monster-body">
+            <div class="monster-eye"><div class="monster-pupil"></div></div>
+            <div class="monster-wheel"></div>
+            <div class="monster-wheel-circle"></div>
+        </div>
+        <div class="nice-job-badge"><span>⭐</span> Nice job!</div>
+        <div class="ad-desc">This is a test interstitial ad</div>
+        <div style="margin-top:20px; color:#aaa; font-size:12px;">Test ID: ca-app-pub-3940256099942544/1033173712</div>
+    </div>
 </div>
 
 <script>
-    // Banner Reklamları Yükle
-    try {
-        (adsbygoogle = window.adsbygoogle || []).push({});
-        (adsbygoogle = window.adsbygoogle || []).push({});
-    } catch (e) {
-        console.log('Banner ads loading:', e);
-    }
-
-    // Interstitial Reklam Fonksiyonu
-    let adSkipTimer = null;
-    let adSkipCountdown = 5;
-
+    // Interstitial Reklam Fonksiyonu (YENİ AKIŞ)
     function showInterstitialAd() {
         return new Promise((resolve) => {
-            const overlay = document.getElementById('ad-loading-overlay');
-            const skipBtn = document.getElementById('ad-skip-btn');
-            const skipInfo = document.getElementById('ad-skip-info');
-            
+            const overlay = document.getElementById('interstitial-overlay');
+            const loadingView = document.getElementById('loading-view');
+            const toast = document.getElementById('ad-toast');
+            const visuals = document.getElementById('ad-visuals');
+            const closeBtn = document.getElementById('ad-close-btn');
+
+            // Reset States
             overlay.classList.remove('hidden');
-            skipBtn.disabled = true;
-            adSkipCountdown = 5;
-            skipBtn.innerText = `Reklamı Geç (${adSkipCountdown})`;
-            
-            // 5 saniye geri sayım
-            adSkipTimer = setInterval(() => {
-                adSkipCountdown--;
-                if (adSkipCountdown > 0) {
-                    skipBtn.innerText = `Reklamı Geç (${adSkipCountdown})`;
-                    skipInfo.innerText = `Reklamı ${adSkipCountdown} saniye sonra geçebilirsiniz...`;
-                } else {
-                    clearInterval(adSkipTimer);
-                    skipBtn.disabled = false;
-                    skipBtn.innerText = 'Reklamı Geç';
-                    skipInfo.innerText = 'Artık reklamı geçebilirsiniz!';
-                }
-            }, 1000);
-            
-            // Skip butonuna tıklama
-            skipBtn.onclick = () => {
-                if (!skipBtn.disabled) {
-                    clearInterval(adSkipTimer);
-                    overlay.classList.add('hidden');
-                    resolve(true);
-                }
+            loadingView.style.display = 'block';
+            visuals.style.display = 'none';
+            closeBtn.style.display = 'none';
+            toast.classList.add('hidden');
+
+            // 1. Simüle Edilmiş Yükleme (1.5 sn)
+            setTimeout(() => {
+                loadingView.style.display = 'none';
+                
+                // 2. Toast Mesajı Göster
+                toast.classList.remove('hidden');
+                
+                // 3. Kısa bir süre sonra Toast gider, Reklam gelir
+                setTimeout(() => {
+                    toast.classList.add('hidden');
+                    visuals.style.display = 'flex';
+                    closeBtn.style.display = 'block';
+                }, 1000); // Toast 1 sn görünür
+
+            }, 1500); // Yükleniyor 1.5 sn sürer
+
+            // X Butonuna Tıklama (Reklamı Kapat)
+            closeBtn.onclick = () => {
+                overlay.classList.add('hidden');
+                resolve(true);
             };
         });
     }
@@ -368,7 +402,7 @@
         const inputName = document.getElementById('p-name').value.trim();
         if(!inputName) return alert(curLang === 'tr' ? "İsim gir!" : "Enter name!");
         
-        // Reklamı göster
+        // Reklamı göster (YENİ AKIŞ)
         await showInterstitialAd();
         
         // Oda kur
