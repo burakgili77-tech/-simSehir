@@ -10,7 +10,8 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3940256099942544"
+    <!-- Google AdMob Test ID'leri -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-app-pub-3940256099942544"
      crossorigin="anonymous"></script>
     
     <style>
@@ -93,9 +94,10 @@
 <body>
 
 <div id="banner-ad-top">
+    <!-- AdMob Banner Test ID: ca-app-pub-3940256099942544/6300978111 -->
     <ins class="adsbygoogle"
          style="display:inline-block;width:320px;height:50px"
-         data-ad-client="ca-pub-3940256099942544"
+         data-ad-client="ca-app-pub-3940256099942544"
          data-ad-slot="6300978111"></ins>
 </div>
 
@@ -190,10 +192,11 @@
 
     <div id="ad-real-container">
         <button id="ad-close-btn">✕</button>
+        <!-- AdMob Interstitial Test ID: ca-app-pub-3940256099942544/1033173712 -->
         <ins class="adsbygoogle"
              style="display:inline-block;width:300px;height:250px"
-             data-ad-client="ca-pub-3940256099942544"
-             data-ad-slot="6300978111"></ins>
+             data-ad-client="ca-app-pub-3940256099942544"
+             data-ad-slot="1033173712"></ins>
     </div>
 </div>
 
@@ -201,7 +204,13 @@
     // --- REKLAM YÖNETİMİ (GÜÇLENDİRİLMİŞ) ---
     
     // Banner Başlat
-    try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) { console.error("Banner Ad Error"); }
+    window.addEventListener('load', function() {
+        try { 
+            (adsbygoogle = window.adsbygoogle || []).push({}); 
+        } catch (e) { 
+            console.error("Banner Ad Error:", e); 
+        }
+    });
 
     async function showInterstitialAd() {
         return new Promise((resolve) => {
@@ -220,22 +229,25 @@
                 loadingView.style.display = 'none';
                 adContainer.style.display = 'flex';
                 try {
-                    const ins = adContainer.querySelector('ins');
-                    ins.innerHTML = ""; 
-                    ins.removeAttribute('data-adsbygoogle-status');
+                    // Yeni reklam isteği gönder
                     (adsbygoogle = window.adsbygoogle || []).push({});
-                } catch (e) { console.log("Ad Push Error"); }
+                } catch (e) { 
+                    console.log("Ad Push Error:", e); 
+                }
             };
 
-            // Reklamı 1.2 saniye sonra göster (Yükleme hissi ve hazırlık için)
-            const autoShow = setTimeout(displayAd, 1200);
+            // Reklamı 1.5 saniye sonra göster (Yükleme hissi ve hazırlık için)
+            const autoShow = setTimeout(displayAd, 1500);
 
-            // Güvenlik: Eğer reklam yüklenmezse 5 saniye sonra geçmeye izin ver
+            // Güvenlik: Eğer reklam yüklenmezse 8 saniye sonra geçmeye izin ver
             const safetyTimeout = setTimeout(() => {
                 if(overlay.classList.contains('hidden')) return;
-                statusText.innerText = "Reklam yüklenemedi, devam ediliyor...";
-                setTimeout(() => { overlay.classList.add('hidden'); resolve(true); }, 1000);
-            }, 5000);
+                statusText.innerText = curLang === 'tr' ? "Reklam yüklenemedi, devam ediliyor..." : "Ad failed, continuing...";
+                setTimeout(() => { 
+                    overlay.classList.add('hidden'); 
+                    resolve(true); 
+                }, 1000);
+            }, 8000);
 
             closeBtn.onclick = () => {
                 clearTimeout(autoShow);
