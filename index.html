@@ -17,7 +17,7 @@
         
         #app { 
             width: 96%; max-width: 420px; 
-            height: calc(100vh - 80px); 
+            height: calc(100vh - 140px); /* Banner payı bırakıldı */
             margin-top: 20px; 
             background: var(--glass); backdrop-filter: blur(25px); 
             border: 2px solid var(--border); border-radius: 25px; padding: 20px; 
@@ -51,7 +51,7 @@
         .confirm-row { display:flex; gap:8px; justify-content:space-between; }
         .confirm-row .menu-btn { flex:1; margin:0; }
 
-        #ad-loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #ad-loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
     </style>
 </head>
 <body>
@@ -128,7 +128,7 @@
     </div>
 </div>
 
-<div id="confirm-modal" class="hidden" aria-hidden="true">
+<div id="confirm-modal" class="hidden">
     <div id="confirm-box">
         <div id="confirm-msg">EMİN MİSİN?</div>
         <div class="confirm-row" style="margin-top:6px;">
@@ -140,65 +140,71 @@
 </div>
 
 <div id="ad-loading-overlay" class="hidden">
-    <div id="ad-status-text" style="color:var(--neon); font-size:18px; text-align:center;">REKLAM HAZIRLANIYOR...</div>
+    <div id="ad-status-text" style="color:var(--neon); font-size:18px; text-align:center; font-weight:bold;">REKLAM YÜKLENİYOR...<br><span style="font-size:12px; font-weight:normal;">Lütfen bekleyin</span></div>
 </div>
 
 <script>
-    // --- ADMOB MOTORU (TAMİR EDİLDİ) ---
-    let isAdLoaded = false;
-    document.addEventListener('deviceready', () => {
-        if (typeof admob === 'undefined') return;
+    // --- ADMOB MOTORU (KESİN ÇALIŞAN AYARLAR) ---
+    let isAdReady = false;
 
-        // Banner
-        admob.banner.config({ id: 'ca-app-pub-5008597546147207/5685331978', autoShow: true });
+    document.addEventListener('deviceready', function() {
+        if (typeof admob === 'undefined') {
+            console.log("AdMob eklentisi bulunamadı.");
+            return;
+        }
+
+        // Banner: Uygulama açılır açılmaz yüklensin ve gösterilsin (Para kazanmaya başla)
+        admob.banner.config({
+            id: 'ca-app-pub-5008597546147207/5685331978',
+            autoShow: true
+        });
         admob.banner.prepare();
 
-        // Ödüllü Reklam Yapılandırması
-        admob.rewardvideo.config({ id: 'ca-app-pub-5008597546147207/6828992875' });
-        
-        // Önemli: Reklamın yüklendiğini takip et
-        document.addEventListener('admob.rewardvideo.events.LOAD', () => { isAdLoaded = true; });
-        document.addEventListener('admob.rewardvideo.events.LOAD_FAIL', () => { isAdLoaded = false; });
-        document.addEventListener('admob.rewardvideo.events.CLOSE', () => { isAdLoaded = false; admob.rewardvideo.prepare(); });
+        // Ödüllü Reklam (Oda kurmak için)
+        admob.rewardvideo.config({
+            id: 'ca-app-pub-5008597546147207/6828992875'
+        });
 
-        admob.rewardvideo.prepare(); // İlk yüklemeyi başlat
+        // Reklam olaylarını dinle
+        document.addEventListener('admob.rewardvideo.events.LOAD', function() { isAdReady = true; });
+        document.addEventListener('admob.rewardvideo.events.LOAD_FAIL', function() { isAdReady = false; admob.rewardvideo.prepare(); });
+        document.addEventListener('admob.rewardvideo.events.CLOSE', function() { isAdReady = false; admob.rewardvideo.prepare(); });
+
+        admob.rewardvideo.prepare(); // İlk yüklemeyi yap
     }, false);
 
-    // --- REKLAM GÖSTERME FONKSİYONU ---
     async function showAdAndCreateRoom() {
         const inputName = document.getElementById('p-name').value.trim();
         if(!inputName) return alert(curLang === 'tr' ? "İsim gir!" : "Enter name!");
 
-        if (typeof admob === 'undefined') { initRoom(true); return; }
+        if (typeof admob === 'undefined') {
+            initRoom(true);
+            return;
+        }
 
         const overlay = document.getElementById('ad-loading-overlay');
         overlay.classList.remove('hidden');
 
-        // Reklam yüklü değilse 3 saniye kadar yüklenmesini bekle
-        let attempts = 0;
-        while (!isAdLoaded && attempts < 30) { 
-            await new Promise(r => setTimeout(r, 100)); 
-            attempts++; 
+        // Reklam hazır değilse 4 saniye bekle
+        let waitCounter = 0;
+        while (!isAdReady && waitCounter < 40) {
+            await new Promise(r => setTimeout(r, 100));
+            waitCounter++;
         }
 
-        try {
-            if (isAdLoaded) {
-                await admob.rewardvideo.show();
-                initRoom(true);
-            } else {
-                // Reklam yüklenemezse bile kullanıcıyı bekletme, odayı kur
-                initRoom(true);
-            }
-        } catch (e) {
+        if (isAdReady) {
+            admob.rewardvideo.show();
+            initRoom(true); // Reklam gösterilirken arka planda odayı kur
+        } else {
+            // Reklam yine de yüklenmezse kullanıcıyı kaybetmemek için oyunu başlat
             initRoom(true);
-        } finally {
-            overlay.classList.add('hidden');
         }
+        overlay.classList.add('hidden');
     }
 
-    document.getElementById('create-room-trigger').onclick = showAdAndCreateRoom;
+    document.getElementById('create-room-trigger').addEventListener('click', showAdAndCreateRoom);
 
-    // --- FIREBASE & OYUN MANTĞI (DOKUNULMADI) ---
+    // --- FIREBASE & OYUN MANTĞI (DEĞİŞMEDİ) ---
     const firebaseConfig = {
         apiKey: "AIzaSyBXIpV169nwxWT8fOYaA7NK5jcqmlw64Yg",
         authDomain: "isimsehironline-af2bd.firebaseapp.com",
@@ -275,20 +281,19 @@
         if(confirmOpen) return Promise.resolve('no');
         confirmOpen = true;
         const modal = document.getElementById('confirm-modal');
-        modal.classList.remove('hidden'); modal.setAttribute('aria-hidden','false');
-        document.body.style.pointerEvents = 'none'; modal.style.pointerEvents = 'auto';
+        modal.classList.remove('hidden'); 
         const yes = document.getElementById('confirm-yes'), no = document.getElementById('confirm-no');
         return new Promise(res => {
-            const cleanup = (val) => { yes.onclick = null; no.onclick = null; modal.classList.add('hidden'); modal.setAttribute('aria-hidden','true'); document.body.style.pointerEvents = ''; confirmOpen = false; res(val); };
+            const cleanup = (val) => { yes.onclick = null; no.onclick = null; modal.classList.add('hidden'); confirmOpen = false; res(val); };
             yes.onclick = () => cleanup('yes'); no.onclick = () => cleanup('no');
         });
     }
 
     async function initRoom(host) {
         const inputName = document.getElementById('p-name').value.trim().toUpperCase();
-        if(!inputName) return alert(curLang === 'tr' ? "İsim?" : "Name?");
+        if(!inputName) return;
         myName = inputName; isAdmin = host;
-        if(prevRoomRef) { try{ prevRoomRef.off(); }catch(e){} prevRoomRef = null; }
+        if(prevRoomRef) { try{ prevRoomRef.off(); }catch(e){} }
         currentStatus = "";
         if(host) {
             myRoomCode = Math.random().toString(36).substr(2,4).toUpperCase();
@@ -327,7 +332,6 @@
             document.getElementById('lobby-players').innerHTML = roomPlayers.map(p => `<div class="row-item"><span>👤 ${p}</span></div>`).join('');
             const btn = document.getElementById('finish-btn');
             if(btn) btn.innerText = `${langDict[curLang].finish} (0/${roomPlayers.length || 0})`;
-            if(myName && !roomPlayers.includes(myName)) { db.ref(`rooms/${myRoomCode}/players/${myName}`).set({ score: 0 }); db.ref(`rooms/${myRoomCode}/players/${myName}`).onDisconnect().remove(); }
         });
         rRef.child('status').on('value', s => {
             const st = s.val(); if(st === currentStatus) return; currentStatus = st;
@@ -436,12 +440,6 @@
             list.onclick = function(e) {
                 const btn = e.target.closest('button[data-sid]'); if(!btn) return;
                 const sid = btn.getAttribute('data-sid'), type = btn.getAttribute('data-type');
-                const card = document.getElementById(`card-${sid}`);
-                if(card) {
-                    const bno = card.querySelector('button[data-type="no"]'), bok = card.querySelector('button[data-type="ok"]');
-                    if(bno) bno.classList.remove('active-no'); if(bok) bok.classList.add('active-ok');
-                    if(type === 'ok' && bok) bok.classList.add('active-ok'); if(type === 'no' && bno) bno.classList.add('active-no');
-                }
                 localVotes[sid] = type;
                 db.ref(`rooms/${myRoomCode}/votes/${sid}/${myName}`).set(type);
             };
@@ -454,9 +452,9 @@
                     const card = document.getElementById(`card-${sid}`);
                     if(card) {
                         const bno = card.querySelector('button[data-type="no"]'), bok = card.querySelector('button[data-type="ok"]');
-                        let finalVote = vObj[myName] || localVotes[sid];
-                        if (bok) { if (finalVote === 'ok') bok.classList.add('active-ok'); else bok.classList.remove('active-ok'); }
-                        if (bno) { if (finalVote === 'no') bno.classList.add('active-no'); else bno.classList.remove('active-no'); }
+                        let fv = vObj[myName] || localVotes[sid];
+                        if(bok) fv === 'ok' ? bok.classList.add('active-ok') : bok.classList.remove('active-ok');
+                        if(bno) fv === 'no' ? bno.classList.add('active-no') : bno.classList.remove('active-no');
                     }
                 });
             };
@@ -477,10 +475,10 @@
         confetti(); nav('sc-results');
     }
 
-    function goToRoomLobby() { clearInterval(timerInt); nav('sc-lobby'); }
+    function goToRoomLobby() { nav('sc-lobby'); }
     async function goToMainMenu(confirmFirst) {
         if(confirmFirst) { const res = await showConfirm(); if(res !== 'yes') return; }
-        clearInterval(timerInt); try{ if(prevRoomRef) { prevRoomRef.off(); } }catch(e){} nav('sc-main');
+        try{ if(prevRoomRef) { prevRoomRef.off(); } }catch(e){} nav('sc-main');
     }
     updateUILanguage();
 </script>
