@@ -103,15 +103,11 @@
 <body>
 
 <div id="banner-ad-top">
-    <!-- AdMob Banner Test ID -->
-    <div class="ad-container">
-        <ins class="adsbygoogle"
-             style="display:block; width:320px; height:50px;"
-             data-ad-client="ca-app-pub-3940256099942544"
-             data-ad-slot="6300978111"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
-    </div>
+    <!-- AdMob Banner Test ID: ca-app-pub-3940256099942544~3347511713 -->
+    <ins class="adsbygoogle"
+         style="display:inline-block;width:320px;height:50px"
+         data-ad-client="ca-app-pub-3940256099942544"
+         data-ad-slot="6300978111"></ins>
 </div>
 
 <div id="app">
@@ -206,32 +202,26 @@
     <div id="ad-real-container">
         <button id="ad-close-btn">✕</button>
         <!-- AdMob Interstitial Test ID -->
-        <div class="ad-container" style="width:100%; height:100%;">
-            <ins class="adsbygoogle"
-                 style="display:block; width:300px; height:250px;"
-                 data-ad-client="ca-app-pub-3940256099942544"
-                 data-ad-slot="1033173712"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-        </div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-app-pub-3940256099942544"
+             data-ad-slot="1033173712"
+             data-ad-format="autorelaxed"></ins>
     </div>
 </div>
 
 <script>
-    // --- REKLAM YÖNETİMİ (GÜÇLENDİRİLMİŞ) ---
-    
-    // Banner Yükleme - Sayfa yüklenince başlat
+    // --- BANNER REKLAM YÜKLENİYOR ---
     window.addEventListener('load', function() {
-        setTimeout(function() {
-            try { 
-                (adsbygoogle = window.adsbygoogle || []).push({}); 
-                console.log("Banner ad initialized");
-            } catch (e) { 
-                console.error("Banner Ad Error:", e); 
-            }
-        }, 1000); // 1 saniye gecikme ile yükle
+        try {
+            (adsbygoogle = window.adsbygoogle || []).push({});
+            console.log("✅ Banner reklam başlatıldı");
+        } catch (e) {
+            console.error("❌ Banner reklam hatası:", e);
+        }
     });
 
+    // --- İNTERSTİTİAL (GEÇİŞ) REKLAM FONKSİYONU ---
     async function showInterstitialAd() {
         return new Promise((resolve) => {
             const overlay = document.getElementById('interstitial-overlay');
@@ -240,47 +230,42 @@
             const statusText = document.getElementById('ad-status-text');
             const closeBtn = document.getElementById('ad-close-btn');
 
+            // Overlay'i göster
             overlay.classList.remove('hidden');
             loadingView.style.display = 'block';
             adContainer.style.display = 'none';
             statusText.innerText = curLang === 'tr' ? "Reklam Hazırlanıyor..." : "Preparing Ad...";
 
-            const displayAd = () => {
+            // Reklamı yükle ve göster
+            setTimeout(() => {
+                try {
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                    console.log("✅ Interstitial reklam yüklendi");
+                } catch (e) {
+                    console.error("❌ Interstitial reklam hatası:", e);
+                }
+                
+                // Yükleme animasyonunu gizle, reklamı göster
                 loadingView.style.display = 'none';
                 adContainer.style.display = 'flex';
-                
-                try {
-                    // Yeni reklam isteği gönder
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                    console.log("Interstitial ad pushed");
-                } catch (e) { 
-                    console.log("Ad Push Error:", e); 
-                }
-            };
+            }, 2000);
 
-            // Reklamı 2 saniye sonra göster (Yükleme hissi ve hazırlık için)
-            const autoShow = setTimeout(displayAd, 2000);
-
-            // Güvenlik: Eğer reklam yüklenmezse 10 saniye sonra geçmeye izin ver
-            const safetyTimeout = setTimeout(() => {
-                if(overlay.classList.contains('hidden')) return;
-                statusText.innerText = curLang === 'tr' ? "Reklam yüklenemedi, devam ediliyor..." : "Ad failed, continuing...";
-                setTimeout(() => { 
-                    overlay.classList.add('hidden'); 
-                    resolve(true); 
-                }, 1500);
+            // Güvenlik: 10 saniye sonra otomatik kapat
+            const safetyTimer = setTimeout(() => {
+                overlay.classList.add('hidden');
+                resolve(true);
             }, 10000);
 
+            // Kapatma butonu
             closeBtn.onclick = () => {
-                clearTimeout(autoShow);
-                clearTimeout(safetyTimeout);
+                clearTimeout(safetyTimer);
                 overlay.classList.add('hidden');
                 resolve(true);
             };
         });
     }
 
-    // --- FIREBASE & OYUN MANTIĞI (DEĞİŞTİRİLMEDİ) ---
+    // --- FIREBASE & OYUN MANTIĞI ---
     const firebaseConfig = {
         apiKey: "AIzaSyBXIpV169nwxWT8fOYaA7NK5jcqmlw64Yg",
         authDomain: "isimsehironline-af2bd.firebaseapp.com",
@@ -315,13 +300,13 @@
         return catMapENtoTR[c] || c;
     }
 
-    // ODA KUR Butonu: Reklam Altyapısı Burada Tetiklenir
+    // ODA KUR - REKLAM GÖSTERİLİYOR
     document.getElementById('create-room-trigger').addEventListener('click', async () => {
         const inputName = document.getElementById('p-name').value.trim();
         if(!inputName) return alert(curLang === 'tr' ? "İsim gir!" : "Enter name!");
         
-        await showInterstitialAd(); // Reklamı göster ve bitmesini bekle
-        initRoom(true); // Odayı kur
+        await showInterstitialAd(); // Reklam göster
+        initRoom(true); // Oda kur
     });
 
     // --- DİĞER FONKSİYONLAR ---
