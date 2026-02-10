@@ -9,8 +9,7 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
-<!-- GOOGLE ADSENSE - GERÇEKTEKİNİ BURAYA KOYUN -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3940256099942544"
      crossorigin="anonymous"></script>
 
 <style>
@@ -21,7 +20,7 @@
     /* BANNER REKLAM ALANI (ÜST) */
     #banner-ad-container {
         width: 100%;
-        min-height: 60px;
+        min-height: 60px; /* Banner için yer tutucu */
         background: #000;
         display: flex;
         align-items: center;
@@ -29,12 +28,13 @@
         border-bottom: 1px solid var(--border);
         position: relative;
         z-index: 1000;
+        overflow: hidden;
     }
 
     #app { 
         width: 96%; 
         max-width: 420px; 
-        height: calc(100vh - 70px);
+        height: calc(100vh - 70px); /* Banner payı */
         margin: 5px auto 0 auto;
         background: var(--glass); 
         backdrop-filter: blur(25px); 
@@ -133,11 +133,13 @@
     #ad-placeholder {
         background: #000;
         min-height: 250px;
+        width: 100%;
         border-radius: 10px;
         display: flex;
         align-items: center;
         justify-content: center;
         margin-bottom: 10px;
+        overflow: hidden;
     }
 
     .spinner { border: 4px solid #333; border-top: 4px solid var(--neon); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
@@ -146,13 +148,14 @@
 </head>
 <body>
 
-<!-- ÜST BANNER REKLAM -->
 <div id="banner-ad-container">
-    <!-- AdSense Banner (320x50) -->
     <ins class="adsbygoogle"
-         style="display:inline-block;width:320px;height:50px"
-         data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-         data-ad-slot="YYYYYYYYYYYY"></ins>
+         style="display:block; width:100%; max-width:320px; height:50px;"
+         data-ad-client="ca-pub-3940256099942544"
+         data-ad-slot="6300978111"
+         data-ad-format="auto"
+         data-full-width-responsive="true"
+         data-adtest="on"></ins>
 </div>
 
 <div id="app">
@@ -238,7 +241,6 @@
     </div>
 </div>
 
-<!-- INTERSTITIAL REKLAM OVERLAY -->
 <div id="interstitial-overlay" class="hidden">
     <div id="ad-content">
         <div id="ad-close-section">
@@ -247,11 +249,11 @@
         </div>
         
         <div id="ad-placeholder">
-            <!-- AdSense Interstitial (300x250) -->
             <ins class="adsbygoogle"
                  style="display:inline-block;width:300px;height:250px"
-                 data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-                 data-ad-slot="ZZZZZZZZZZZZ"></ins>
+                 data-ad-client="ca-pub-3940256099942544"
+                 data-ad-slot="1033173712"
+                 data-adtest="on"></ins>
         </div>
         
         <div style="text-align:center; color:#666; font-size:11px;">Reklam</div>
@@ -259,39 +261,67 @@
 </div>
 
 <script>
+    // Global AdSense değişkenini güvenli başlat
+    var adsbygoogle = window.adsbygoogle || [];
+
+    // AdBlock veya Ağ Hatası Kontrolü
+    function checkAdSystem() {
+        if (typeof adsbygoogle === 'undefined' || !window.google_ad_client) {
+            console.warn('⚠️ AdSense yüklenemedi. AdBlock aktif olabilir.');
+            return false;
+        }
+        return true;
+    }
+
     // BANNER REKLAM YÜKLENİYOR
     window.addEventListener('load', function() {
         try {
-            (adsbygoogle = window.adsbygoogle || []).push({});
-            console.log('✅ Banner reklam yüklendi');
+            // Sadece banner boşsa pushla
+            const banner = document.querySelector('#banner-ad-container .adsbygoogle');
+            if(banner && !banner.getAttribute('data-adsbygoogle-status')) {
+                adsbygoogle.push({});
+                console.log('✅ Banner reklam isteği gönderildi (Test Modu)');
+            }
         } catch (e) {
             console.error('❌ Banner reklam hatası:', e);
         }
     });
 
-    // INTERSTITIAL REKLAM FONKSİYONU
+    // INTERSTITIAL REKLAM FONKSİYONU (Sağlamlaştırılmış)
     async function showInterstitialAd() {
+        // Eğer AdBlock varsa veya script yüklenmediyse direkt geç
+        // if (!checkAdSystem()) return Promise.resolve(true); // İsteğe bağlı: Direkt geçiş
+
         return new Promise((resolve) => {
             const overlay = document.getElementById('interstitial-overlay');
             const closeBtn = document.getElementById('ad-close-btn');
             const timerEl = document.getElementById('ad-timer');
 
+            // 1. Overlay'i göster (Render için)
             overlay.classList.remove('hidden');
 
-            // AdSense reklam yükle
-            try {
-                const adIns = overlay.querySelector('.adsbygoogle');
-                if (adIns && !adIns.dataset.adsbygoogleStatus) {
-                    (adsbygoogle = window.adsbygoogle || []).push({});
+            // 2. Reklam isteğini hafif gecikmeli gönder (DOM safe)
+            setTimeout(() => {
+                try {
+                    const adIns = overlay.querySelector('.adsbygoogle');
+                    // Mükerrer isteği önle
+                    if (adIns && !adIns.getAttribute('data-adsbygoogle-status')) {
+                        adsbygoogle.push({});
+                        console.log('✅ Interstitial reklam isteği gönderildi (Test ID)');
+                    }
+                } catch (e) {
+                    console.error('❌ Interstitial push hatası:', e);
+                    // Hata olsa bile kullanıcıyı kilitleme, timer devam etsin
                 }
-            } catch (e) {
-                console.error('❌ Interstitial reklam hatası:', e);
-            }
+            }, 100);
 
-            // 5 saniye timer
+            // 3. Timer Mantığı (Sağlamlaştırılmış)
             let countdown = 5;
             closeBtn.classList.remove('active');
             
+            // Timer metnini sıfırla
+            timerEl.innerText = curLang === 'tr' ? `Reklam ${countdown}` : `Ad ${countdown}`;
+
             const timerInterval = setInterval(() => {
                 countdown--;
                 timerEl.innerText = curLang === 'tr' ? `Reklam ${countdown}` : `Ad ${countdown}`;
@@ -300,14 +330,24 @@
                     clearInterval(timerInterval);
                     timerEl.innerText = '';
                     closeBtn.classList.add('active');
+                    
+                    // Güvenlik: Eğer kullanıcı çok beklerse otomatik kapatma eklenebilir
+                    // ama şimdilik manuel kapama istendiği için bırakıyoruz.
                 }
             }, 1000);
 
-            closeBtn.onclick = () => {
-                if (!closeBtn.classList.contains('active')) return;
+            const safeClose = () => {
                 clearInterval(timerInterval);
                 overlay.classList.add('hidden');
+                
+                // Reklam alanını temizlemeye gerek yok, AdSense kendi yönetir.
+                // Ama DOM şişmemesi için refresh gerekirse buraya eklenebilir.
                 resolve(true);
+            };
+
+            closeBtn.onclick = () => {
+                if (!closeBtn.classList.contains('active')) return;
+                safeClose();
             };
         });
     }
