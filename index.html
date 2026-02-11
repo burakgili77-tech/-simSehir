@@ -266,7 +266,7 @@
         }
     });
 
-    // INTERSTITIAL (GEÇİŞ) REKLAM MANTIĞI - TEST MODU EKLENDİ
+    // INTERSTITIAL (GEÇİŞ) REKLAM MANTIĞI - Google Resmi Test ID'leri ile
     function showInterstitialAd() {
         return new Promise((resolve) => {
             const overlay = document.getElementById('interstitial-overlay');
@@ -280,8 +280,9 @@
             // Reklam alanını temizle
             placeholder.innerHTML = '';
             
-            // DİKKAT: Test reklamı için 'data-adtest="on"' EKLENDİ.
-            // Bu, APK içinde veya yerel dosyalarda reklamın çalışmasını sağlar.
+            // DİKKAT: Google'ın Resmi Test ID'leri kullanıldı.
+            // Client: ca-pub-3940256099942544 (Google Test Publisher)
+            // Slot: 1033173712 (Google Test Interstitial)
             const adHTML = `
                 <ins class="adsbygoogle"
                  style="display:inline-block;width:300px;height:250px"
