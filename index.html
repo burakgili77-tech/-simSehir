@@ -10,7 +10,7 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3940256099942544"
-     crossorigin="anonymous" onerror="console.error('AdSense scripti yüklenemedi! İnternet bağlantısını veya AdBlock kontrol et.')"></script>
+     crossorigin="anonymous" onerror="console.error('AdSense scripti yüklenemedi!')"></script>
 
 <style>
     :root { --neon: #00f2ff; --glass: rgba(12, 28, 48, 0.98); --border: rgba(0, 242, 255, 0.3); --bg: #010816; --win: #00ff88; }
@@ -244,9 +244,7 @@
             <div id="ad-timer">Reklam 5</div>
             <button id="ad-close-btn">KAPAT ✕</button>
         </div>
-        
-        <div id="ad-placeholder">
-            </div>
+        <div id="ad-placeholder"></div>
         
         <div style="text-align:center; color:#666; font-size:11px;">Reklam</div>
     </div>
@@ -261,14 +259,14 @@
             const banner = document.querySelector('#banner-ad-container .adsbygoogle');
             if(banner && !banner.getAttribute('data-adsbygoogle-status')) {
                 adsbygoogle.push({});
-                console.log('✅ Banner reklam isteği yapıldı.');
+                console.log('✅ Banner reklam isteği yapıldı (Test Modu).');
             }
         } catch (e) {
             console.warn('Banner yüklenirken hata:', e);
         }
     });
 
-    // INTERSTITIAL (GEÇİŞ) REKLAM MANTIĞI
+    // INTERSTITIAL (GEÇİŞ) REKLAM MANTIĞI - TEST MODU EKLENDİ
     function showInterstitialAd() {
         return new Promise((resolve) => {
             const overlay = document.getElementById('interstitial-overlay');
@@ -279,10 +277,11 @@
             // Overlay görünür yap
             overlay.classList.remove('hidden');
             
-            // Reklam alanını temizle ve yeniden oluştur (Refresh için gerekli)
+            // Reklam alanını temizle
             placeholder.innerHTML = '';
             
-            // data-adtest="on" ile test reklamı zorla
+            // DİKKAT: Test reklamı için 'data-adtest="on"' EKLENDİ.
+            // Bu, APK içinde veya yerel dosyalarda reklamın çalışmasını sağlar.
             const adHTML = `
                 <ins class="adsbygoogle"
                  style="display:inline-block;width:300px;height:250px"
@@ -296,7 +295,7 @@
             setTimeout(() => {
                 try {
                     (adsbygoogle = window.adsbygoogle || []).push({});
-                    console.log('✅ Geçiş reklamı isteği gönderildi.');
+                    console.log('✅ Geçiş reklamı isteği gönderildi (Test Modu).');
                 } catch(e) { 
                     console.error("Ad push error", e); 
                 }
