@@ -249,77 +249,67 @@
         </div>
         
         <div id="ad-placeholder">
-            <ins class="adsbygoogle"
-                 style="display:inline-block;width:300px;height:250px"
-                 data-ad-client="ca-pub-3940256099942544"
-                 data-ad-slot="1033173712"
-                 data-adtest="on"></ins>
-        </div>
+            </div>
         
         <div style="text-align:center; color:#666; font-size:11px;">Reklam</div>
     </div>
 </div>
 
 <script>
-    // Global AdSense değişkenini güvenli başlat
+    // Global AdSense dizisini başlat
     var adsbygoogle = window.adsbygoogle || [];
 
-    // AdBlock veya Ağ Hatası Kontrolü
-    function checkAdSystem() {
-        if (typeof adsbygoogle === 'undefined' || !window.google_ad_client) {
-            console.warn('⚠️ AdSense yüklenemedi. AdBlock aktif olabilir.');
-            return false;
-        }
-        return true;
-    }
-
-    // BANNER REKLAM YÜKLENİYOR
+    // 1. BANNER REKLAMI YÜKLE
     window.addEventListener('load', function() {
         try {
-            // Sadece banner boşsa pushla
+            // Banner zaten HTML içinde var, sadece push etmemiz yeterli
+            // Tekrar yüklemeyi önlemek için kontrol
             const banner = document.querySelector('#banner-ad-container .adsbygoogle');
             if(banner && !banner.getAttribute('data-adsbygoogle-status')) {
                 adsbygoogle.push({});
                 console.log('✅ Banner reklam isteği gönderildi (Test Modu)');
             }
         } catch (e) {
-            console.error('❌ Banner reklam hatası:', e);
+            console.error('Banner Error:', e);
         }
     });
 
-    // INTERSTITIAL REKLAM FONKSİYONU (Sağlamlaştırılmış)
-    async function showInterstitialAd() {
-        // Eğer AdBlock varsa veya script yüklenmediyse direkt geç
-        // if (!checkAdSystem()) return Promise.resolve(true); // İsteğe bağlı: Direkt geçiş
-
+    // 2. INTERSTITIAL (GEÇİŞ) REKLAM MANTIĞI - DÜZELTİLDİ
+    function showInterstitialAd() {
         return new Promise((resolve) => {
             const overlay = document.getElementById('interstitial-overlay');
             const closeBtn = document.getElementById('ad-close-btn');
             const timerEl = document.getElementById('ad-timer');
+            const placeholder = document.getElementById('ad-placeholder');
 
-            // 1. Overlay'i göster (Render için)
+            // Overlay'i aç
             overlay.classList.remove('hidden');
+            
+            // Önceki reklamı temizle ve YENİ bir ins tagi oluştur
+            // Web sayfalarında aynı slotu tekrar tetiklemek için DOM'u yenilemek en sağlıklısıdır.
+            placeholder.innerHTML = '';
+            
+            // data-adtest="on" ekleyerek test modunu zorluyoruz
+            const adHTML = `
+                <ins class="adsbygoogle"
+                 style="display:inline-block;width:300px;height:250px"
+                 data-ad-client="ca-pub-3940256099942544"
+                 data-ad-slot="1033173712"
+                 data-adtest="on"></ins>
+            `;
+            placeholder.innerHTML = adHTML;
 
-            // 2. Reklam isteğini hafif gecikmeli gönder (DOM safe)
+            // Reklamı Google'a bildir
             setTimeout(() => {
                 try {
-                    const adIns = overlay.querySelector('.adsbygoogle');
-                    // Mükerrer isteği önle
-                    if (adIns && !adIns.getAttribute('data-adsbygoogle-status')) {
-                        adsbygoogle.push({});
-                        console.log('✅ Interstitial reklam isteği gönderildi (Test ID)');
-                    }
-                } catch (e) {
-                    console.error('❌ Interstitial push hatası:', e);
-                    // Hata olsa bile kullanıcıyı kilitleme, timer devam etsin
-                }
-            }, 100);
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                    console.log('✅ Interstitial reklam yenilendi');
+                } catch(e) { console.error("Ad push error", e); }
+            }, 50);
 
-            // 3. Timer Mantığı (Sağlamlaştırılmış)
+            // Timer Mantığı
             let countdown = 5;
             closeBtn.classList.remove('active');
-            
-            // Timer metnini sıfırla
             timerEl.innerText = curLang === 'tr' ? `Reklam ${countdown}` : `Ad ${countdown}`;
 
             const timerInterval = setInterval(() => {
@@ -330,29 +320,21 @@
                     clearInterval(timerInterval);
                     timerEl.innerText = '';
                     closeBtn.classList.add('active');
-                    
-                    // Güvenlik: Eğer kullanıcı çok beklerse otomatik kapatma eklenebilir
-                    // ama şimdilik manuel kapama istendiği için bırakıyoruz.
                 }
             }, 1000);
 
-            const safeClose = () => {
-                clearInterval(timerInterval);
-                overlay.classList.add('hidden');
-                
-                // Reklam alanını temizlemeye gerek yok, AdSense kendi yönetir.
-                // Ama DOM şişmemesi için refresh gerekirse buraya eklenebilir.
-                resolve(true);
-            };
-
             closeBtn.onclick = () => {
                 if (!closeBtn.classList.contains('active')) return;
-                safeClose();
+                clearInterval(timerInterval);
+                overlay.classList.add('hidden');
+                // Reklam içeriğini temizle (DOM şişmesin)
+                placeholder.innerHTML = ''; 
+                resolve(true);
             };
         });
     }
 
-    // FIREBASE & OYUN MANTIĞI
+    // FIREBASE & OYUN MANTIĞI (DEĞİŞTİRİLMEDİ)
     const firebaseConfig = {
         apiKey: "AIzaSyBXIpV169nwxWT8fOYaA7NK5jcqmlw64Yg",
         authDomain: "isimsehironline-af2bd.firebaseapp.com",
@@ -387,11 +369,12 @@
         return catMapENtoTR[c] || c;
     }
 
-    // ODA KUR - REKLAM GÖSTERİLİYOR
+    // ODA KUR BUTONU - REKLAM TETİKLER
     document.getElementById('create-room-trigger').addEventListener('click', async () => {
         const inputName = document.getElementById('p-name').value.trim();
         if(!inputName) return alert(curLang === 'tr' ? "İsim gir!" : "Enter name!");
         
+        // Reklamı bekle, sonra odayı kur
         await showInterstitialAd();
         initRoom(true);
     });
